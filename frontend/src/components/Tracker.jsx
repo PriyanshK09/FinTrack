@@ -1,18 +1,10 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { PieChart, TrendingUp, Plus, Trash2, Calendar, Tag, Target, AlertCircle } from 'lucide-react'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart as RePieChart, Pie, Cell } from 'recharts'
 import '../styles/Tracker.css'
 
-const mockData = [
-  { name: 'Jan', income: 4000, expenses: 2400 },
-  { name: 'Feb', income: 3000, expenses: 1398 },
-  { name: 'Mar', income: 2000, expenses: 9800 },
-  { name: 'Apr', income: 2780, expenses: 3908 },
-  { name: 'May', income: 1890, expenses: 4800 },
-  { name: 'Jun', income: 2390, expenses: 3800 },
-]
-
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8']
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
 export default function Tracker() {
   const [transactions, setTransactions] = useState([
@@ -39,6 +31,52 @@ export default function Tracker() {
     target: '',
     current: '',
   })
+
+  const [chartData, setChartData] = useState([])
+  const [pieChartData, setPieChartData] = useState([])
+
+  useEffect(() => {
+    updateChartData()
+    updateGoals()
+  }, [transactions])
+
+  const updateChartData = () => {
+    const monthlyData = MONTHS.map(month => ({ name: month, income: 0, expenses: 0 }))
+
+    transactions.forEach(t => {
+      const month = new Date(t.date).getMonth()
+      if (t.type === 'income') {
+        monthlyData[month].income += t.amount
+      } else {
+        monthlyData[month].expenses += t.amount
+      }
+    })
+
+    setChartData(monthlyData)
+
+    const categoryData = transactions
+      .filter(t => t.type === 'expense')
+      .reduce((acc, t) => {
+        acc[t.category] = (acc[t.category] || 0) + t.amount
+        return acc
+      }, {})
+
+    setPieChartData(Object.entries(categoryData).map(([name, value]) => ({ name, value })))
+  }
+
+  const updateGoals = () => {
+    setGoals(prevGoals => 
+      prevGoals.map(goal => {
+        const relevantTransactions = transactions.filter(t => 
+          t.category.toLowerCase() === goal.description.toLowerCase()
+        )
+        const totalAmount = relevantTransactions.reduce((sum, t) => 
+          t.type === 'income' ? sum + t.amount : sum - t.amount, 0
+        )
+        return { ...goal, current: goal.current + totalAmount }
+      })
+    )
+  }
 
   const handleInputChange = (e) => {
     const { name, value } = e.target
@@ -102,15 +140,6 @@ export default function Tracker() {
 
   const balance = totalIncome - totalExpenses
 
-  const categoryData = transactions
-    .filter(t => t.type === 'expense')
-    .reduce((acc, t) => {
-      acc[t.category] = (acc[t.category] || 0) + t.amount
-      return acc
-    }, {})
-
-  const pieChartData = Object.entries(categoryData).map(([name, value]) => ({ name, value }))
-
   return (
     <div className="tracker-container">
       <main className="tracker-main">
@@ -133,7 +162,7 @@ export default function Tracker() {
         <section className="chart-section">
           <h2><TrendingUp size={20} /> Income vs Expenses</h2>
           <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={mockData}>
+            <LineChart data={chartData}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="name" />
               <YAxis />
@@ -217,7 +246,7 @@ export default function Tracker() {
                 <div className="goal-info">
                   <span className="goal-description">{goal.description}</span>
                   <progress value={goal.current} max={goal.target}></progress>
-                  <span className="goal-progress">${goal.current} / ${goal.target}</span>
+                  <span className="goal-progress">${goal.current.toFixed(2)} / ${goal.target}</span>
                 </div>
                 <button onClick={() => deleteGoal(goal.id)} className="delete-btn">
                   <Trash2 size={16} />
