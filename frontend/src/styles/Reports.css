@@ -1,0 +1,199 @@
+:root {
+  --primary-color: #3498db;
+  --secondary-color: #2ecc71;
+  --accent-color: #e67e22;
+  --background-color: #f5f5f5;
+  --card-background: #ffffff;
+  --text-color: #333333;
+  --light-text-color: #777777;
+  --border-color: #dddddd;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  margin: 0;
+  padding: 0;
+}
+
+.reports-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.reports-main {
+  display: grid;
+  gap: 20px;
+}
+
+.reports-title {
+  font-size: 2.5rem;
+  color: var(--primary-color);
+  margin: 4rem 0 1rem;
+  text-align: center;
+}
+
+.time-range-selector {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.time-range-select {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  background-color: var(--card-background);
+  color: var(--text-color);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.time-range-select:hover {
+  border-color: var(--primary-color);
+}
+
+.reports-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap:  20px;
+}
+
+.report-card {
+  background-color: var(--card-background);
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.report-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.card-title {
+  font-size: 1.25rem;
+  color: var(--primary-color);
+  margin-bottom: 0.5rem;
+}
+
+.card-description {
+  font-size: 0.875rem;
+  color: var(--light-text-color);
+  margin-bottom: 1rem;
+}
+
+.chart-container {
+  height: 300px;
+}
+
+.savings-rate, .debt-to-income {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 1rem;
+}
+
+.savings-percentage, .ratio {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: var(--secondary-color);
+}
+
+.savings-description, .ratio-description {
+  text-align: center;
+  color: var(--text-color);
+}
+
+.top-expenses-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.top-expense-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.top-expense-item:last-child {
+  border-bottom: none;
+}
+
+.category-name {
+  font-weight: bold;
+}
+
+.category-amount {
+  color: var(--accent-color);
+}
+
+.financial-health-score, .debt-to-income {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.score-circle, .ratio-circle {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background-color: var(--secondary-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.score, .ratio {
+  font-size: 2rem;
+  font-weight: bold;
+  color: white;
+}
+
+.score-description, .ratio-description {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.financial-health-tips, .debt-to-income-tips ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.financial-health-tips li, .debt-to-income-tips li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.debt-to-income-tips h3 {
+  color: var(--primary-color);
+  margin-bottom: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .reports-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .reports-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1025px) {
+  .reports-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
