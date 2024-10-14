@@ -1,0 +1,389 @@
+:root {
+  --primary-color: #3498db;
+  --secondary-color: #2ecc71;
+  --background-color: #f5f7fa;
+  --card-background: #ffffff;
+  --text-color: #2c3e50;
+  --light-text-color: #bdc3c7;
+  --border-color: #ecf0f1;
+  --negative-color: #e74c3c;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  margin: 0;
+  padding: 0;
+}
+
+.investments-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px;
+  width: 100%;
+}
+
+.investments-main {
+  display: grid;
+  gap: 20px;
+}
+
+.investments-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  margin-top: 4rem;
+}
+
+.investments-title {
+  font-size: 2.5rem;
+  color: var(--text-color);
+  margin: 0;
+}
+
+.refresh-button {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  color: var(--primary-color);
+  background-color: var(--card-background);
+  border: 1px solid var(--primary-color);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.refresh-button:hover {
+  background-color: var(--primary-color);
+  color: var(--card-background);
+}
+
+.refresh-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.refresh-icon {
+  margin-right: 0.5rem;
+}
+
+.investments-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.investment-card {
+  background-color: var(--card-background);
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.investment-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.card-title {
+  font-size: 1.25rem;
+  color: var(--light-text-color);
+  margin-bottom: 0.5rem;
+}
+
+.card-value {
+  font-size: 2rem;
+  font-weight: bold;
+  color: var(--text-color);
+  display: flex;
+  align-items: center;
+}
+
+.card-icon {
+  margin-right: 0.5rem;
+}
+
+.chart-container {
+  background-color: var(--card-background);
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+.chart-title {
+  font-size: 1.5rem;
+  color: var(--text-color);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+}
+
+.chart-icon {
+  margin-right: 0.5rem;
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+}
+
+.loading-icon {
+  animation: spin 1s linear infinite;
+  color: var(--primary-color);
+  font-size: 2rem;
+}
+
+.loading-text {
+  margin-top: 1rem;
+  color: var(--light-text-color);
+}
+
+.investment-table-container {
+  overflow-x: auto;
+  background-color: var(--card-background);
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.table-controls {
+  display: flex;
+  justify-content: flex-end;
+  padding: 1rem;
+  background-color: var(--background-color);
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+.filter-control {
+  display: flex;
+  align-items: center;
+}
+
+.filter-icon {
+  margin-right: 0.5rem;
+  color: var(--light-text-color);
+}
+
+.filter-control select {
+  padding: 0.5rem;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  background-color: var(--card-background);
+  color: var(--text-color);
+}
+
+.investment-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.investment-table th,
+.investment-table td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.investment-table th {
+  background-color: var(--background-color);
+  font-weight: bold;
+  color: var(--light-text-color);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.investment-table th:hover {
+  background-color: var(--border-color);
+}
+
+.add-investment-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  color: var(--card-background);
+  background-color: var(--secondary-color);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 2rem;
+  width: 100%;
+}
+
+.add-investment-button:hover {
+  background-color: #27ae60;
+}
+
+.add-icon {
+  margin-right: 0.5rem;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.add-investment-modal {
+  background-color: var(--card-background);
+  border-radius: 10px;
+  padding: 20px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.modal-header h2 {
+  font-size: 1.5rem;
+  color: var(--text-color);
+  margin: 0;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.5rem;
+  color: var(--light-text-color);
+  transition: color 0.3s ease;
+}
+
+.close-button:hover {
+  color: var(--text-color);
+}
+
+.add-investment-modal input,
+.add-investment-modal select {
+  width: 100%;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-size: 1rem;
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+.amount-input {
+  position: relative;
+}
+
+.input-icon {
+  position: absolute;
+  left: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--light-text-color);
+}
+
+.amount-input input {
+  padding-left: 1.5rem;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.modal-buttons button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+}
+
+.modal-buttons button:first-child {
+  background-color: var(--primary-color);
+  color: var(--card-background);
+}
+
+.modal-buttons button:first-child:hover {
+  background-color: #2980b9;
+}
+
+.modal-buttons button:last-child {
+  background-color: var(--border-color);
+  color: var(--text-color);
+}
+
+.modal-buttons button:last-child:hover {
+  background-color: #bdc3c7;
+}
+
+.positive {
+  color: var(--secondary-color);
+}
+
+.negative {
+  color: var(--negative-color);
+}
+
+.trend-icon {
+  vertical-align: middle;
+  margin-right: 0.25rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@media (max-width: 768px) {
+  .investments-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .investments-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .refresh-button {
+    margin-top: 1rem;
+  }
+
+  .investment-table th,
+  .investment-table td {
+    padding: 0.5rem;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .investments-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1025px) {
+  .investments-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}

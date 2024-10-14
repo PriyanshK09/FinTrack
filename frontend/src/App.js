@@ -5,6 +5,7 @@ import Home from './components/Home'
 import Login from './components/Login'
 import Tracker from './components/Tracker'
 import Reports from './components/Reports'
+import Investments from './components/Investments'
 import Footer from './components/Footer'
 import './styles/App.css'
 
@@ -18,6 +19,7 @@ export default function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/tracker" element={<Tracker />} />
           <Route path="/reports" element={<Reports />} />
+          <Route path="/investments" element={<Investments />} />
         </Routes>
         <Footer />
       </div>
