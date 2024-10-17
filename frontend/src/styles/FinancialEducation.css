@@ -1,0 +1,444 @@
+:root {
+  --primary-color: #3498db;
+  --secondary-color: #2ecc71;
+  --background-color: #f5f7fa;
+  --card-background: #ffffff;
+  --text-color: #2c3e50;
+  --light-text-color: #7f8c8d;
+  --border-color: #ecf0f1;
+  --completed-color: #27ae60;
+  --hover-color: #e8f4fd;
+  --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --transition: all 0.3s ease;
+}
+
+body {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  line-height: 1.6;
+  margin: 0;
+  padding: 0;
+}
+
+.financial-education-container {
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 40px 20px;
+  box-sizing: border-box;
+}
+
+.financial-education-main {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.page-title {
+  font-size: 2.5rem;
+  color: var(--primary-color);
+  margin: 40px 0 20px;
+  text-align: center;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.section-title {
+  font-size: 1.8rem;
+  color: var(--text-color);
+  margin-bottom: 20px;
+  border-bottom: 2px solid var(--primary-color);
+  padding-bottom: 10px;
+  position: relative;
+}
+
+.section-title::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 50px;
+  height: 2px;
+  background-color: var(--secondary-color);
+}
+
+.intro-section, .topics-section, .quiz-section, .resources-section, .financial-tips-section, .cta-section {
+  background-color: var(--card-background);
+  border-radius: 15px;
+  padding: 30px;
+  box-shadow: var(--shadow);
+  transition: var(--transition);
+}
+
+.intro-section p, .cta-section p {
+  font-size: 1.1rem;
+  margin-bottom: 20px;
+  line-height: 1.6;
+}
+
+.progress-overview {
+  margin-top: 20px;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 10px;
+  background-color: var(--border-color);
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.progress {
+  height: 100%;
+  background-color: var(--primary-color);
+  transition: width 0.5s ease-out;
+}
+
+.topics-grid, .resources-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.topic-card, .resource-card {
+  background-color: var(--card-background);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 20px;
+  transition: var(--transition);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.topic-card:hover, .resource-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow);
+}
+
+.topic-icon, .resource-icon {
+  font-size: 2rem;
+  color: var(--primary-color);
+  margin-bottom: 15px;
+}
+
+.topic-title, .resource-title {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
+
+.topic-description, .resource-description {
+  font-size: 0.9rem;
+  color: var(--light-text-color);
+  margin-bottom: 15px;
+}
+
+.completed-badge {
+  display: flex;
+  align-items: center;
+  color: var(--completed-color);
+  font-weight: 600;
+}
+
+.completed-icon {
+  margin-right: 5px;
+}
+
+.btn {
+  display: inline-block;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 25px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: var(--transition);
+  text-align: center;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.primary-btn {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.primary-btn:hover {
+  background-color: #2980b9;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.secondary-btn {
+  background-color: var(--secondary-color);
+  color: white;
+}
+
+.secondary-btn:hover {
+  background-color: #27ae60;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.quiz-container {
+  background-color: var(--card-background);
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: var(--shadow);
+}
+
+.quiz-progress {
+  font-size: 1rem;
+  color: var(--light-text-color);
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.quiz-question h3 {
+  font-size: 1.3rem;
+  color: var(--text-color);
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.quiz-options {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.quiz-option-btn {
+  width: 100%;
+  text-align: left;
+  background-color: var(--background-color);
+  border: 2px solid var(--border-color);
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 10px;
+  transition: var(--transition);
+}
+
+.quiz-option-btn:hover {
+  background-color: var(--hover-color);
+  border-color: var(--primary-color);
+  transform: translateX(5px);
+}
+
+.quiz-result {
+  text-align: center;
+}
+
+.quiz-result h3 {
+  color: var(--text-color);
+  margin-bottom: 15px;
+  font-size: 1.5rem;
+}
+
+.score-bar-container {
+  width: 100%;
+  height: 20px;
+  background-color: var(--border-color);
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 20px 0;
+}
+
+.score-bar {
+  height: 100%;
+  background-color: var(--primary-color);
+  transition: width 0.5s ease-out;
+}
+
+.resource-link {
+  color: var(--primary-color);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  transition: var(--transition);
+  font-weight: 600;
+}
+
+.resource-link:hover {
+  color: #2980b9;
+}
+
+.arrow-icon {
+  margin-left: 5px;
+  transition: var(--transition);
+}
+
+.resource-link:hover .arrow-icon {
+  transform: translateX(5px);
+}
+
+.tip-carousel {
+  position: relative;
+  height: 100px;
+  overflow: hidden;
+}
+
+.tip-item {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.tip-item.active {
+  opacity: 1;
+}
+
+.tip-icon {
+  font-size: 2rem;
+  color: var(--primary-color);
+  margin-right: 20px;
+}
+
+.tip-text {
+  font-size: 1.1rem;
+  color: var(--text-color);
+}
+
+.cta-section {
+  background-color: var(--primary-color);
+  color: white;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.cta-content {
+  position: relative;
+  z-index: 1;
+}
+
+.cta-section::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 80%);
+  transform: rotate(30deg);
+}
+
+.cta-title {
+  color: white;
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+.cta-btn {
+  background-color: white;
+  color: var(--primary-color);
+  font-size: 1.2rem;
+  padding: 15px 30px;
+  margin-top: 20px;
+}
+
+.cta-btn:hover {
+  background-color: var(--hover-color);
+  color: var(--primary-color);
+}
+
+.resources-locked {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  background-color: var(--background-color);
+  border-radius: 10px;
+  text-align: center;
+}
+
+.locked-icon {
+  font-size: 3rem;
+  color: var(--light-text-color);
+  margin-bottom: 20px;
+}
+
+.resources-locked p {
+  font-size: 1.2rem;
+  color: var(--text-color);
+  margin-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+  .financial-education-container {
+    padding: 20px 15px;
+  }
+
+  .page-title {
+    font-size: 2rem;
+  }
+
+  .section-title {
+    font-size: 1.5rem;
+  }
+
+  .topics-grid, .resources-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cta-section h2 {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-title {
+    font-size: 1.8rem;
+  }
+
+  .section-title {
+    font-size: 1.3rem;
+  }
+
+  .btn {
+    font-size: 0.9rem;
+    padding: 8px 16px;
+  }
+
+  .cta-btn {
+    font-size: 1rem;
+    padding: 12px 24px;
+  }
+
+  .topic-card, .resource-card {
+    padding: 15px;
+  }
+
+  .topic-icon, .resource-icon {
+    font-size: 1.5rem;
+  }
+
+  .topic-title, .resource-title {
+    font-size: 1.1rem;
+  }
+
+  .topic-description, .resource-description {
+    font-size: 0.8rem;
+  }
+
+  .tip-carousel {
+    height: 120px;
+  }
+
+  .tip-icon {
+    font-size: 1.5rem;
+  }
+
+  .tip-text {
+    font-size: 1rem;
+  }
+}
