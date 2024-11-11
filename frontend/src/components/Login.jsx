@@ -1,34 +1,55 @@
-import React, { useState } from 'react'
-import { DollarSign, Mail, Lock, User, ArrowRight, Apple, Github } from 'lucide-react'
-import '../styles/Login.css'
+import React, { useState } from 'react';
+import { DollarSign, Mail, Lock, User, ArrowRight, Apple, Github } from 'lucide-react';
+import '../styles/Login.css';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 export default function Login() {
-  const [isLogin, setIsLogin] = useState(true)
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [name, setName] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
+  const [isLogin, setIsLogin] = useState(true);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    if (isLogin) {
-      console.log('Logging in...', { email, password })
-    } else {
-      console.log('Signing up...', { name, email, password, confirmPassword })
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+
+    try {
+      if (isLogin) {
+        // Login request
+        const response = await axios.post('http://localhost:5000/api/auth/login', { email, password });
+        localStorage.setItem('authToken', response.data.token); // Save the token in localStorage
+        navigate('/'); // Redirect to the homepage after successful login
+      } else {
+        // Signup request
+        if (password !== confirmPassword) {
+          setError('Passwords do not match');
+          return;
+        }
+
+        const response = await axios.post('http://localhost:5000/api/auth/signup', { name, email, password });
+        localStorage.setItem('authToken', response.data.token); // Save the token in localStorage
+        navigate('/'); // Redirect to the homepage after successful signup
+      }
+    } catch (err) {
+      setError('Authentication failed. Please check your credentials and try again.');
     }
-  }
+  };
 
   const handleGoogleAuth = () => {
-    console.log('Authenticating with Google...')
-  }
+    console.log('Authenticating with Google...');
+  };
 
   const handleAppleAuth = () => {
-    console.log('Authenticating with Apple...')
-  }
+    console.log('Authenticating with Apple...');
+  };
 
   const handleGithubAuth = () => {
-    console.log('Authenticating with GitHub...')
-  }
+    console.log('Authenticating with GitHub...');
+  };
 
   return (
     <div className="login-container">
@@ -38,6 +59,7 @@ export default function Login() {
           <h1>FinanceTrack</h1>
         </div>
         <h2>{isLogin ? 'Welcome Back' : 'Create Account'}</h2>
+        {error && <div className="error-message">{error}</div>}
         <form onSubmit={handleSubmit}>
           {!isLogin && (
             <div className="input-group">
@@ -112,5 +134,5 @@ export default function Login() {
         </p>
       </div>
     </div>
-  )
+  );
 }

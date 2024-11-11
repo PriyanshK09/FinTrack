@@ -6,18 +6,17 @@ import { TrendingUp, TrendingDown, RefreshCw, Plus, X, DollarSign, Filter, BarCh
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 import '../styles/Investments.css'
 
-const fetchInvestmentData = () => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve([
-        { id: 1, name: 'S&P 500 ETF', type: 'ETF', amount: 10000, currentValue: 10911.00, returns: 9.11 },
-        { id: 2, name: 'Apple Inc.', type: 'Stock', amount: 5000, currentValue: 5472.78, returns: 9.46 },
-        { id: 3, name: 'US Treasury Bonds', type: 'Bonds', amount: 15000, currentValue: 15318.33, returns: 2.12 },
-        { id: 4, name: 'Bitcoin', type: 'Crypto', amount: 2000, currentValue: 2350.00, returns: 17.50 },
-        { id: 5, name: 'Real Estate Fund', type: 'Real Estate', amount: 20000, currentValue: 21200.00, returns: 6.00 },
-      ])
-    }, 1000)
-  })
+const fetchInvestmentData = async () => {
+  try {
+    const response = await fetch('/api/investments') // API call to fetch investments
+    if (!response.ok) {
+      throw new Error('Failed to fetch investment data')
+    }
+    return await response.json()
+  } catch (error) {
+    console.error("Error fetching investment data:", error)
+    return [] // Return an empty array if there's an error
+  }
 }
 
 const generateChartData = (investments) => {
@@ -55,7 +54,7 @@ export default function Investments() {
     return () => clearInterval(intervalId)
   }, [])
 
-  const handleAddInvestment = () => {
+  const handleAddInvestment = async () => {
     if (newInvestment.name && newInvestment.type && newInvestment.amount) {
       const investment = {
         id: Date.now(),
@@ -68,6 +67,17 @@ export default function Investments() {
       const updatedInvestments = [...investments, investment]
       setInvestments(updatedInvestments)
       setChartData(generateChartData(updatedInvestments))
+
+      try {
+        await fetch('/api/investments', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(investment)
+        })
+      } catch (error) {
+        console.error('Error adding investment:', error)
+      }
+
       setNewInvestment({ name: '', type: '', amount: '' })
       setIsAddingInvestment(false)
     }
@@ -202,7 +212,6 @@ export default function Investments() {
                     <td>{investment.amount.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</td>
                     <td>{investment.currentValue.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</td>
                     <td className={investment.returns >= 0 ? 'positive' : 'negative'}>
-                      {investment.returns >= 0 ? <TrendingUp className="trend-icon" /> : <TrendingDown className="trend-icon" />}
                       {investment.returns.toFixed(2)}%
                     </td>
                   </tr>
@@ -212,65 +221,44 @@ export default function Investments() {
           </div>
         )}
 
-        <button className="add-investment-button" onClick={() => setIsAddingInvestment(true)}>
-          <Plus className="add-icon" />
-          Add New Investment
-        </button>
+        <div className="add-investment">
+          <button onClick={() => setIsAddingInvestment(!isAddingInvestment)} className="add-investment-btn">
+            <Plus className="add-investment-icon" /> Add Investment
+          </button>
 
-        <AnimatePresence>
           {isAddingInvestment && (
-            <motion.div 
-              className="modal-overlay"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
+            <motion.div
+              className="investment-form"
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
             >
-              <motion.div 
-                className="add-investment-modal"
-                initial={{ scale: 0.9, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.9, opacity: 0 }}
-              >
-                <div className="modal-header">
-                  <h2>Add New Investment</h2>
-                  <button className="close-button" onClick={() => setIsAddingInvestment(false)}>
-                    <X />
-                  </button>
-                </div>
-                <input
-                  type="text"
-                  placeholder="Investment Name"
-                  value={newInvestment.name}
-                  onChange={(e) => setNewInvestment({ ...newInvestment, name: e.target.value })}
-                />
-                <select
-                  value={newInvestment.type}
-                  onChange={(e) => setNewInvestment({ ...newInvestment, type: e.target.value })}
-                >
-                  <option value="">Select Type</option>
-                  <option value="Stock">Stock</option>
-                  <option value="ETF">ETF</option>
-                  <option value="Bonds">Bonds</option>
-                  <option value="Crypto">Cryptocurrency</option>
-                  <option value="Real Estate">Real Estate</option>
-                </select>
-                <div className="amount-input">
-                  <DollarSign className="input-icon" />
-                  <input
-                    type="number"
-                    placeholder="Amount"
-                    value={newInvestment.amount}
-                    onChange={(e) => setNewInvestment({ ...newInvestment, amount: e.target.value })}
-                  />
-                </div>
-                <div className="modal-buttons">
-                  <button onClick={handleAddInvestment}>Add Investment</button>
-                  <button onClick={() => setIsAddingInvestment(false)}>Cancel</button>
-                </div>
-              </motion.div>
+              <h3>Add New Investment</h3>
+              <input
+                type="text"
+                value={newInvestment.name}
+                onChange={(e) => setNewInvestment({ ...newInvestment, name: e.target.value })}
+                placeholder="Investment Name"
+              />
+              <input
+                type="text"
+                value={newInvestment.type}
+                onChange={(e) => setNewInvestment({ ...newInvestment, type: e.target.value })}
+                placeholder="Investment Type"
+              />
+              <input
+                type="number"
+                value={newInvestment.amount}
+                onChange={(e) => setNewInvestment({ ...newInvestment, amount: e.target.value })}
+                placeholder="Invested Amount"
+              />
+              <div className="form-buttons">
+                <button onClick={handleAddInvestment}>Add Investment</button>
+                <button onClick={() => setIsAddingInvestment(false)}><X className="close-icon" /></button>
+              </div>
             </motion.div>
           )}
-        </AnimatePresence>
+        </div>
       </motion.main>
     </div>
   )

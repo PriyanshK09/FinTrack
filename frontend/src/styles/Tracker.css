@@ -85,8 +85,6 @@ body {
   box-shadow: var(--card-shadow);
 }
 
-
-
 .chart-section h2, .goals-section h2, .insights-section h2 {
   display: flex;
   align-items: center;
@@ -137,13 +135,44 @@ body {
   transition: background-color 0.3s ease;
 }
 
+.transaction-info,
+.goal-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 8px;
+  margin-left: 16px;
+}
+
+.delete-btn,
+.edit-btn {
+  background: none;
+  border: none;
+  color: var(--light-text-color);
+  cursor: pointer;
+  transition: color 0.3s ease;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.delete-btn:hover,
+.edit-btn:hover {
+  color: var(--negative-color);
+}
+
 .transaction-item:last-child,
 .goal-item:last-child {
   border-bottom: none;
 }
 
-.transaction-item:hover,
-.goal-item:hover {
+.transaction-item:hover {
   background-color: var(--input-bg);
 }
 
@@ -182,7 +211,8 @@ body {
   color: var(--negative-color);
 }
 
-.delete-btn {
+.delete-btn,
+.edit-btn {
   background: none;
   border: none;
   color: var(--light-text-color);
@@ -190,19 +220,27 @@ body {
   transition: color 0.3s ease;
 }
 
-.delete-btn:hover {
+.delete-btn:hover,
+.edit-btn:hover {
   color: var(--negative-color);
 }
 
+.goal-item .delete-btn:hover,
+.goal-item .edit-btn:hover {
+  color: var(--light-text-color);
+}
+
 .add-transaction-section form,
-.add-goal-form {
+.add-goal-form,
+.edit-goal-form {
   display: grid;
   gap: 15px;
 }
 
 .add-transaction-section input,
 .add-transaction-section select,
-.add-goal-form input {
+.add-goal-form input,
+.edit-goal-form input {
   width: 100%;
   padding: 12px;
   border: 1px solid var(--input-border);
@@ -213,13 +251,15 @@ body {
 
 .add-transaction-section input:focus,
 .add-transaction-section select:focus,
-.add-goal-form input:focus {
+.add-goal-form input:focus,
+.edit-goal-form input:focus {
   outline: none;
   border-color: var(--accent-color);
 }
 
 .add-transaction-section button,
-.add-goal-form button {
+.add-goal-form button,
+.edit-goal-form button {
   padding: 12px;
   background-color: var(--accent-color);
   color: white;
@@ -231,7 +271,8 @@ body {
 }
 
 .add-transaction-section button:hover,
-.add-goal-form button:hover {
+.add-goal-form button:hover,
+.edit-goal-form button:hover {
   background-color: #d35400;
 }
 

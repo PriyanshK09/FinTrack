@@ -1,144 +1,195 @@
-import React, { useState, useEffect } from 'react'
-import { PieChart, TrendingUp, Plus, Trash2, Calendar, Tag, Target, AlertCircle } from 'lucide-react'
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart as RePieChart, Pie, Cell } from 'recharts'
-import '../styles/Tracker.css'
+import React, { useState, useEffect } from 'react';
+import { PieChart, TrendingUp, Plus, Trash2, Calendar, Tag, Target, AlertCircle, Edit3 } from 'lucide-react';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart as RePieChart, Pie, Cell } from 'recharts';
+import axios from 'axios';
+import '../styles/Tracker.css';
 
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8']
-const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8'];
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
 export default function Tracker() {
-  const [transactions, setTransactions] = useState([
-    { id: 1, description: 'Salary', amount: 5000, type: 'income', date: '2023-10-01', category: 'Work' },
-    { id: 2, description: 'Rent', amount: 1200, type: 'expense', date: '2023-10-05', category: 'Housing' },
-    { id: 3, description: 'Groceries', amount: 300, type: 'expense', date: '2023-10-10', category: 'Food' },
-  ])
-
+  const [transactions, setTransactions] = useState([]);
   const [newTransaction, setNewTransaction] = useState({
     description: '',
     amount: '',
     type: 'expense',
     date: '',
     category: '',
-  })
-
-  const [goals, setGoals] = useState([
-    { id: 1, description: 'Emergency Fund', target: 10000, current: 5000 },
-    { id: 2, description: 'Vacation Savings', target: 5000, current: 2000 },
-  ])
-
+  });
+  const [goals, setGoals] = useState([]);
   const [newGoal, setNewGoal] = useState({
     description: '',
     target: '',
     current: '',
-  })
-
-  const [chartData, setChartData] = useState([])
-  const [pieChartData, setPieChartData] = useState([])
+  });
+  const [chartData, setChartData] = useState([]);
+  const [pieChartData, setPieChartData] = useState([]);
+  const [editingGoal, setEditingGoal] = useState(null);
 
   useEffect(() => {
-    updateChartData()
-    updateGoals()
-  }, [transactions])
+    fetchTransactions();
+    fetchGoals();
+  }, []);
+
+  useEffect(() => {
+    updateChartData();
+    updateGoals();
+  }, [transactions]);
+
+  const fetchTransactions = async () => {
+    try {
+      const token = localStorage.getItem('authToken');
+      const response = await axios.get('http://localhost:5000/api/transactions', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setTransactions(response.data);
+    } catch (error) {
+      console.error('Error fetching transactions:', error);
+    }
+  };
+
+  const fetchGoals = async () => {
+    try {
+      const token = localStorage.getItem('authToken');
+      const response = await axios.get('http://localhost:5000/api/goals', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setGoals(response.data);
+    } catch (error) {
+      console.error('Error fetching goals:', error);
+    }
+  };
 
   const updateChartData = () => {
-    const monthlyData = MONTHS.map(month => ({ name: month, income: 0, expenses: 0 }))
-
+    const monthlyData = MONTHS.map(month => ({ name: month, income: 0, expenses: 0 }));
     transactions.forEach(t => {
-      const month = new Date(t.date).getMonth()
+      const month = new Date(t.date).getMonth();
       if (t.type === 'income') {
-        monthlyData[month].income += t.amount
+        monthlyData[month].income += t.amount;
       } else {
-        monthlyData[month].expenses += t.amount
+        monthlyData[month].expenses += t.amount;
       }
-    })
-
-    setChartData(monthlyData)
-
+    });
+    setChartData(monthlyData);
     const categoryData = transactions
       .filter(t => t.type === 'expense')
       .reduce((acc, t) => {
-        acc[t.category] = (acc[t.category] || 0) + t.amount
-        return acc
-      }, {})
-
-    setPieChartData(Object.entries(categoryData).map(([name, value]) => ({ name, value })))
-  }
+        acc[t.category] = (acc[t.category] || 0) + t.amount;
+        return acc;
+      }, {});
+    setPieChartData(Object.entries(categoryData).map(([name, value]) => ({ name, value })));
+  };
 
   const updateGoals = () => {
     setGoals(prevGoals => 
       prevGoals.map(goal => {
         const relevantTransactions = transactions.filter(t => 
           t.category.toLowerCase() === goal.description.toLowerCase()
-        )
+        );
         const totalAmount = relevantTransactions.reduce((sum, t) => 
           t.type === 'income' ? sum + t.amount : sum - t.amount, 0
-        )
-        return { ...goal, current: goal.current + totalAmount }
+        );
+        return { ...goal, current: goal.current + totalAmount };
       })
-    )
-  }
+    );
+  };
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target
-    setNewTransaction(prev => ({ ...prev, [name]: value }))
-  }
+    const { name, value } = e.target;
+    setNewTransaction(prev => ({ ...prev, [name]: value }));
+  };
 
   const handleGoalInputChange = (e) => {
-    const { name, value } = e.target
-    setNewGoal(prev => ({ ...prev, [name]: value }))
-  }
+    const { name, value } = e.target;
+    setNewGoal(prev => ({ ...prev, [name]: value }));
+  };
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
+  const handleEditGoalChange = (e) => {
+    const { name, value } = e.target;
+    setEditingGoal(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     if (newTransaction.description && newTransaction.amount && newTransaction.date && newTransaction.category) {
-      setTransactions(prev => [
-        ...prev,
-        {
-          id: Date.now(),
-          description: newTransaction.description,
-          amount: parseFloat(newTransaction.amount),
-          type: newTransaction.type,
-          date: newTransaction.date,
-          category: newTransaction.category,
-        },
-      ])
-      setNewTransaction({ description: '', amount: '', type: 'expense', date: '', category: '' })
+      try {
+        const token = localStorage.getItem('authToken');
+        const response = await axios.post('http://localhost:5000/api/transactions', newTransaction, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        setTransactions(prev => [...prev, response.data]);
+        setNewTransaction({ description: '', amount: '', type: 'expense', date: '', category: '' });
+      } catch (error) {
+        console.error('Error adding transaction:', error);
+      }
     }
-  }
+  };
 
-  const handleGoalSubmit = (e) => {
-    e.preventDefault()
+  const handleGoalSubmit = async (e) => {
+    e.preventDefault();
     if (newGoal.description && newGoal.target && newGoal.current) {
-      setGoals(prev => [
-        ...prev,
-        {
-          id: Date.now(),
-          description: newGoal.description,
-          target: parseFloat(newGoal.target),
-          current: parseFloat(newGoal.current),
-        },
-      ])
-      setNewGoal({ description: '', target: '', current: '' })
+      try {
+        const token = localStorage.getItem('authToken');
+        const response = await axios.post('http://localhost:5000/api/goals', newGoal, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        setGoals(prev => [...prev, response.data]);
+        setNewGoal({ description: '', target: '', current: '' });
+      } catch (error) {
+        console.error('Error adding goal:', error);
+      }
     }
-  }
+  };
 
-  const deleteTransaction = (id) => {
-    setTransactions(prev => prev.filter(transaction => transaction.id !== id))
-  }
+  const handleEditGoalSubmit = async (e) => {
+    e.preventDefault();
+    if (editingGoal.description && editingGoal.target && editingGoal.current) {
+      try {
+        const token = localStorage.getItem('authToken');
+        const response = await axios.put(`http://localhost:5000/api/goals/${editingGoal._id}`, editingGoal, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        setGoals(prev => prev.map(goal => (goal._id === editingGoal._id ? response.data : goal)));
+        setEditingGoal(null);
+      } catch (error) {
+        console.error('Error editing goal:', error);
+      }
+    }
+  };
 
-  const deleteGoal = (id) => {
-    setGoals(prev => prev.filter(goal => goal.id !== id))
-  }
+  const deleteTransaction = async (id) => {
+    try {
+      const token = localStorage.getItem('authToken');
+      await axios.delete(`http://localhost:5000/api/transactions/${id}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setTransactions(prev => prev.filter(transaction => transaction._id !== id));
+    } catch (error) {
+      console.error('Error deleting transaction:', error);
+    }
+  };
+
+  const deleteGoal = async (id) => {
+    try {
+      const token = localStorage.getItem('authToken');
+      await axios.delete(`http://localhost:5000/api/goals/${id}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setGoals(prev => prev.filter(goal => goal._id !== id));
+    } catch (error) {
+      console.error('Error deleting goal:', error);
+    }
+  };
 
   const totalIncome = transactions
     .filter(t => t.type === 'income')
-    .reduce((sum, t) => sum + t.amount, 0)
+    .reduce((sum, t) => sum + t.amount, 0);
 
   const totalExpenses = transactions
     .filter(t => t.type === 'expense')
-    .reduce((sum, t) => sum + t.amount, 0)
+    .reduce((sum, t) => sum + t.amount, 0);
 
-  const balance = totalIncome - totalExpenses
+  const balance = totalIncome - totalExpenses;
 
   return (
     <div className="tracker-container">
@@ -146,7 +197,7 @@ export default function Tracker() {
         <section className="summary-section">
           <div className="summary-card">
             <h2>Balance</h2>
-            <p className={`balance ${balance >= 0 ? 'positive' : 'negative'}`}>
+            <p className={`balance ${balance >= 0 ? "positive" : "negative"}`}>
               ${balance.toFixed(2)}
             </p>
           </div>
@@ -160,7 +211,9 @@ export default function Tracker() {
           </div>
         </section>
         <section className="chart-section">
-          <h2><TrendingUp size={20} /> Income vs Expenses</h2>
+          <h2>
+            <TrendingUp size={20} /> Income vs Expenses
+          </h2>
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={chartData}>
               <CartesianGrid strokeDasharray="3 3" />
@@ -168,24 +221,51 @@ export default function Tracker() {
               <YAxis />
               <Tooltip />
               <Legend />
-              <Line type="monotone" dataKey="income" stroke="#27ae60" strokeWidth={2} />
-              <Line type="monotone" dataKey="expenses" stroke="#e74c3c" strokeWidth={2} />
+              <Line
+                type="monotone"
+                dataKey="income"
+                stroke="#27ae60"
+                strokeWidth={2}
+              />
+              <Line
+                type="monotone"
+                dataKey="expenses"
+                stroke="#e74c3c"
+                strokeWidth={2}
+              />
             </LineChart>
           </ResponsiveContainer>
         </section>
         <div className="bottom-sections">
           <section className="transactions-section">
-            <h2><PieChart size={20} /> Recent Transactions</h2>
+            <h2>
+              <PieChart size={20} /> Recent Transactions
+            </h2>
             <ul className="transaction-list">
-              {transactions.map(transaction => (
-                <li key={transaction.id} className={`transaction-item ${transaction.type}`}>
+              {transactions.map((transaction) => (
+                <li
+                  key={transaction._id}
+                  className={`transaction-item ${transaction.type}`}
+                >
                   <div className="transaction-info">
-                    <span className="transaction-description">{transaction.description}</span>
-                    <span className="transaction-category"><Tag size={14} /> {transaction.category}</span>
-                    <span className="transaction-date"><Calendar size={14} /> {transaction.date}</span>
+                    <span className="transaction-description">
+                      {transaction.description}
+                    </span>
+                    <span className="transaction-category">
+                      <Tag size={14} /> {transaction.category}
+                    </span>
+                    <span className="transaction-date">
+                      <Calendar size={14} />{" "}
+                      {new Date(transaction.date).toLocaleDateString()}
+                    </span>
                   </div>
-                  <span className="transaction-amount">${transaction.amount.toFixed(2)}</span>
-                  <button onClick={() => deleteTransaction(transaction.id)} className="delete-btn">
+                  <span className="transaction-amount">
+                    ${transaction.amount.toFixed(2)}
+                  </span>
+                  <button
+                    onClick={() => deleteTransaction(transaction._id)}
+                    className="delete-btn"
+                  >
                     <Trash2 size={16} />
                   </button>
                 </li>
@@ -193,7 +273,9 @@ export default function Tracker() {
             </ul>
           </section>
           <section className="add-transaction-section">
-            <h2><Plus size={20} /> Add New Transaction</h2>
+            <h2>
+              <Plus size={20} /> Add New Transaction
+            </h2>
             <form onSubmit={handleSubmit}>
               <input
                 type="text"
@@ -239,21 +321,68 @@ export default function Tracker() {
           </section>
         </div>
         <section className="goals-section">
-          <h2><Target size={20} /> Financial Goals</h2>
+          <h2>
+            <Target size={20} /> Financial Goals
+          </h2>
           <ul className="goals-list">
-            {goals.map(goal => (
-              <li key={goal.id} className="goal-item">
+            {goals.map((goal) => (
+              <li key={goal._id} className="goal-item">
                 <div className="goal-info">
                   <span className="goal-description">{goal.description}</span>
                   <progress value={goal.current} max={goal.target}></progress>
-                  <span className="goal-progress">${goal.current.toFixed(2)} / ${goal.target}</span>
+                  <span className="goal-progress">
+                    ${goal.current.toFixed(2)} / ${goal.target}
+                  </span>
                 </div>
-                <button onClick={() => deleteGoal(goal.id)} className="delete-btn">
-                  <Trash2 size={16} />
-                </button>
+                <div className="action-buttons">
+                  <button
+                    onClick={() => setEditingGoal(goal)}
+                    className="edit-btn"
+                  >
+                    <Edit3 size={16} />
+                  </button>
+                  <button
+                    onClick={() => deleteGoal(goal._id)}
+                    className="delete-btn"
+                  >
+                    <Trash2 size={16} />
+                  </button>
+                </div>
               </li>
             ))}
           </ul>
+          {editingGoal && (
+            <form onSubmit={handleEditGoalSubmit} className="edit-goal-form">
+              <input
+                type="text"
+                name="description"
+                placeholder="Goal Description"
+                value={editingGoal.description}
+                onChange={handleEditGoalChange}
+                required
+              />
+              <input
+                type="number"
+                name="target"
+                placeholder="Target Amount"
+                value={editingGoal.target}
+                onChange={handleEditGoalChange}
+                required
+              />
+              <input
+                type="number"
+                name="current"
+                placeholder="Current Amount"
+                value={editingGoal.current}
+                onChange={handleEditGoalChange}
+                required
+              />
+              <button type="submit">Update Goal</button>
+              <button type="button" onClick={() => setEditingGoal(null)}>
+                Cancel
+              </button>
+            </form>
+          )}
           <form onSubmit={handleGoalSubmit} className="add-goal-form">
             <input
               type="text"
@@ -283,7 +412,9 @@ export default function Tracker() {
           </form>
         </section>
         <section className="insights-section">
-          <h2><AlertCircle size={20} /> Financial Insights</h2>
+          <h2>
+            <AlertCircle size={20} /> Financial Insights
+          </h2>
           <div className="insights-content">
             <div className="insight-card">
               <h3>Spending by Category</h3>
@@ -298,8 +429,11 @@ export default function Tracker() {
                     fill="#8884d8"
                     dataKey="value"
                   >
-                    {pieChartData.map((_, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    {pieChartData.map((entry, index) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={COLORS[index % COLORS.length]}
+                      />
                     ))}
                   </Pie>
                   <Tooltip />
@@ -318,5 +452,5 @@ export default function Tracker() {
         </section>
       </main>
     </div>
-  )
+  );
 }

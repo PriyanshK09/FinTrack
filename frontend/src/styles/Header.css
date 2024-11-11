@@ -119,6 +119,11 @@
   background-color: #d35400;
 }
 
+.auth-buttons {
+  display: flex;
+  gap: 1rem;
+}
+
 @media (max-width: 1024px) {
   :root {
     --header-padding: 0 1rem;

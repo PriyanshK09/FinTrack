@@ -1,16 +1,49 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { PieChart, Wallet, TrendingUp, Shield, Users, Gift, ChevronRight } from 'lucide-react'
 import '../styles/Home.css'
+import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
 
 export default function Home() {
+  const [userData, setUserData] = useState(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const token = localStorage.getItem('authToken');
+        if (token) {
+          const response = await axios.get('http://localhost:5000/api/auth/user', {
+            headers: { Authorization: `Bearer ${token}` }
+          });
+          setUserData(response.data);
+        }
+      } catch (error) {
+        console.error('Failed to fetch user data', error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
+  const handleStartTrial = () => {
+    if (userData) {
+      // User is authenticated, navigate to the trial page or start the trial
+      navigate('/tracker');
+    } else {
+      // User is not authenticated, navigate to the login page
+      navigate('/login');
+    }
+  };
+
   return (
     <main className="home">
       <section className="hero">
         <div className="hero-content">
           <h1>Master Your Finances</h1>
           <p>Empower your financial journey with FinanceTrack - Your all-in-one solution for budgeting, tracking, and growing your wealth.</p>
-          <button className="cta-button">
-            Start Free Trial
+          <button className="cta-button" onClick={handleStartTrial}>
+            Get Started
             <ChevronRight size={20} />
           </button>
         </div>
@@ -104,7 +137,7 @@ export default function Home() {
       <section className="cta">
         <h2>Ready to Transform Your Financial Life?</h2>
         <p>Join over 100,000 users who have taken control of their finances with FinanceTrack</p>
-        <button className="cta-button">
+        <button className="cta-button" onClick={handleStartTrial}>
           Start Your Free 30-Day Trial
           <ChevronRight size={20} />
         </button>
