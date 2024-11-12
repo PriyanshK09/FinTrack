@@ -10,6 +10,19 @@ import '../styles/Reports.css'
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8', '#82ca9d', '#a4de6c', '#d0ed57', '#ffc658']
 
+// Create new LoadingChart component
+const LoadingChart = () => (
+  <motion.div 
+    className="loading-chart"
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    exit={{ opacity: 0 }}
+    transition={{ duration: 0.3 }}
+  >
+    <div className="loading-chart-content" />
+  </motion.div>
+);
+
 export default function Reports() {
   const [timeRange, setTimeRange] = useState('month')
   const [categoryData, setCategoryData] = useState([])
@@ -23,10 +36,19 @@ export default function Reports() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState(null)
   const [isBudgetSummaryOpen, setIsBudgetSummaryOpen] = useState(true)
+  const [isChartReady, setIsChartReady] = useState(false);
 
   useEffect(() => {
     fetchData(timeRange)
   }, [timeRange])
+
+  useEffect(() => {
+    // Add artificial delay for smooth transition
+    const timer = setTimeout(() => {
+      setIsChartReady(true);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, []);
 
   const getDateRange = (range) => {
     const now = new Date()
@@ -171,7 +193,9 @@ export default function Reports() {
               <h2 className="card-title">Spending by Category</h2>
               <p className="card-description">Breakdown of your expenses</p>
               <div className="chart-container">
-                {categoryData?.length > 0 ? (
+                {!isChartReady ? (
+                  <LoadingChart />
+                ) : (
                   <ResponsiveContainer width="100%" height={300}>
                     <PieChart>
                       <Pie
@@ -195,8 +219,6 @@ export default function Reports() {
                       <Tooltip formatter={(value) => `$${value.toFixed(2)}`} />
                     </PieChart>
                   </ResponsiveContainer>
-                ) : (
-                  <div className="no-data">No spending data available</div>
                 )}
               </div>
             </div>
@@ -205,17 +227,21 @@ export default function Reports() {
               <h2 className="card-title">Income vs Expenses</h2>
               <p className="card-description">Comparison over time</p>
               <div className="chart-container">
-                <ResponsiveContainer width="100%" height={300}>
-                  <BarChart data={timeSeriesData}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend />
-                    <Bar dataKey="income" fill="#27ae60" />
-                    <Bar dataKey="expenses" fill="#e74c3c" />
-                  </BarChart>
-                </ResponsiveContainer>
+                {!isChartReady ? (
+                  <LoadingChart />
+                ) : (
+                  <ResponsiveContainer width="100%" height={300}>
+                    <BarChart data={timeSeriesData}>
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="name" />
+                      <YAxis />
+                      <Tooltip />
+                      <Legend />
+                      <Bar dataKey="income" fill="#27ae60" />
+                      <Bar dataKey="expenses" fill="#e74c3c" />
+                    </BarChart>
+                  </ResponsiveContainer>
+                )}
               </div>
             </div>
 
@@ -248,15 +274,19 @@ export default function Reports() {
               <h2 className="card-title">Net Worth Trend</h2>
               <p className="card-description">Your financial growth over time</p>
               <div className="chart-container">
-                <ResponsiveContainer width="100%" height={300}>
-                  <AreaChart data={netWorthData}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
-                    <YAxis />
-                    <Tooltip />
-                    <Area type="monotone" dataKey="netWorth" stroke="#8884d8" fill="#8884d8" />
-                  </AreaChart>
-                </ResponsiveContainer>
+                {!isChartReady ? (
+                  <LoadingChart />
+                ) : (
+                  <ResponsiveContainer width="100%" height={300}>
+                    <AreaChart data={netWorthData}>
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="name" />
+                      <YAxis />
+                      <Tooltip />
+                      <Area type="monotone" dataKey="netWorth" stroke="#8884d8" fill="#8884d8" />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                )}
               </div>
             </div>
 
@@ -264,7 +294,9 @@ export default function Reports() {
               <h2 className="card-title">Budget vs Actual Spending</h2>
               <p className="card-description">Monthly spending against budget targets</p>
               <div className="chart-container">
-                {timeSeriesData?.length > 0 ? (
+                {!isChartReady ? (
+                  <LoadingChart />
+                ) : (
                   <ResponsiveContainer width="100%" height={300}>
                     <BarChart data={getBudgetComparison()}>
                       <CartesianGrid strokeDasharray="3 3" />
@@ -287,8 +319,6 @@ export default function Reports() {
                       />
                     </BarChart>
                   </ResponsiveContainer>
-                ) : (
-                  <div className="no-data">No budget comparison data available</div>
                 )}
               </div>
               <div className="budget-summary">
@@ -347,16 +377,20 @@ export default function Reports() {
               <h2 className="card-title">Cash Flow Analysis</h2>
               <p className="card-description">Your cash inflows and outflows over time</p>
               <div className="chart-container">
-                <ResponsiveContainer width="100%" height={300}>
-                  <LineChart data={cashFlowData}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend />
-                    <Line type="monotone" dataKey="cashFlow" stroke="#2ecc71" />
-                  </LineChart>
-                </ResponsiveContainer>
+                {!isChartReady ? (
+                  <LoadingChart />
+                ) : (
+                  <ResponsiveContainer width="100%" height={300}>
+                    <LineChart data={cashFlowData}>
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="name" />
+                      <YAxis />
+                      <Tooltip />
+                      <Legend />
+                      <Line type="monotone" dataKey="cashFlow" stroke="#2ecc71" />
+                    </LineChart>
+                  </ResponsiveContainer>
+                )}
               </div>
             </div>
 

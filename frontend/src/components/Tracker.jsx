@@ -5,9 +5,23 @@ import axios from 'axios';
 import '../styles/Tracker.css';
 import { useCurrency } from '../context/CurrencyContext';
 import { formatCurrency } from '../utils/currencyUtils';
+import { motion } from 'framer-motion';
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8'];
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+// Create new LoadingChart component
+const LoadingChart = () => (
+  <motion.div 
+    className="loading-chart"
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    exit={{ opacity: 0 }}
+    transition={{ duration: 0.3 }}
+  >
+    <div className="loading-chart-content" />
+  </motion.div>
+);
 
 export default function Tracker() {
   const { currency } = useCurrency();
@@ -28,10 +42,19 @@ export default function Tracker() {
   const [chartData, setChartData] = useState([]);
   const [pieChartData, setPieChartData] = useState([]);
   const [editingGoal, setEditingGoal] = useState(null);
+  const [isChartReady, setIsChartReady] = useState(false);
 
   useEffect(() => {
     fetchTransactions();
     fetchGoals();
+  }, []);
+
+  useEffect(() => {
+    // Add artificial delay for smooth transition
+    const timer = setTimeout(() => {
+      setIsChartReady(true);
+    }, 500);
+    return () => clearTimeout(timer);
   }, []);
 
   const updateChartData = useCallback(() => {
@@ -218,27 +241,33 @@ export default function Tracker() {
           <h2>
             <TrendingUp size={20} /> Income vs Expenses
           </h2>
-          <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={chartData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Line
-                type="monotone"
-                dataKey="income"
-                stroke="#27ae60"
-                strokeWidth={2}
-              />
-              <Line
-                type="monotone"
-                dataKey="expenses"
-                stroke="#e74c3c"
-                strokeWidth={2}
-              />
-            </LineChart>
-          </ResponsiveContainer>
+          <div className="chart-container">
+            {!isChartReady ? (
+              <LoadingChart />
+            ) : (
+              <ResponsiveContainer width="100%" height={300}>
+                <LineChart data={chartData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="name" />
+                  <YAxis />
+                  <Tooltip />
+                  <Legend />
+                  <Line
+                    type="monotone"
+                    dataKey="income"
+                    stroke="#27ae60"
+                    strokeWidth={2}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="expenses"
+                    stroke="#e74c3c"
+                    strokeWidth={2}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            )}
+          </div>
         </section>
         <div className="bottom-sections">
           <section className="transactions-section">
@@ -422,27 +451,33 @@ export default function Tracker() {
           <div className="insights-content">
             <div className="insight-card">
               <h3>Spending by Category</h3>
-              <ResponsiveContainer width="100%" height={200}>
-                <RePieChart>
-                  <Pie
-                    data={pieChartData}
-                    cx="50%"
-                    cy="50%"
-                    labelLine={false}
-                    outerRadius={80}
-                    fill="#8884d8"
-                    dataKey="value"
-                  >
-                    {pieChartData.map((entry, index) => (
-                      <Cell
-                        key={`cell-${index}`}
-                        fill={COLORS[index % COLORS.length]}
-                      />
-                    ))}
-                  </Pie>
-                  <Tooltip />
-                </RePieChart>
-              </ResponsiveContainer>
+              <div className="chart-container">
+                {!isChartReady ? (
+                  <LoadingChart />
+                ) : (
+                  <ResponsiveContainer width="100%" height={200}>
+                    <RePieChart>
+                      <Pie
+                        data={pieChartData}
+                        cx="50%"
+                        cy="50%"
+                        labelLine={false}
+                        outerRadius={80}
+                        fill="#8884d8"
+                        dataKey="value"
+                      >
+                        {pieChartData.map((entry, index) => (
+                          <Cell
+                            key={`cell-${index}`}
+                            fill={COLORS[index % COLORS.length]}
+                          />
+                        ))}
+                      </Pie>
+                      <Tooltip />
+                    </RePieChart>
+                  </ResponsiveContainer>
+                )}
+              </div>
             </div>
             <div className="insight-card">
               <h3>Quick Tips</h3>
