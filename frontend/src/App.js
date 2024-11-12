@@ -15,6 +15,7 @@ import Footer from './components/Footer'
 import './styles/App.css'
 import { CurrencyProvider } from './context/CurrencyContext';
 import { AuthProvider } from './context/AuthContext';
+import Checkout from './components/Checkout';
 
 export default function App() {
   return (
@@ -34,6 +35,7 @@ export default function App() {
               <Route path="/financial-education" element={<FinancialEducation />} />
               <Route path="/premium-features" element={<PremiumFeatures />} />
               <Route path="/contact" element={<ContactSales />} />
+              <Route path="/checkout" element={<Checkout />} />
             </Routes>
             <Footer />
           </div>
