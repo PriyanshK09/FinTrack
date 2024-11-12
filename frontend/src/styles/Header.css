@@ -73,6 +73,12 @@
   transition: all var(--transition-speed) ease;
 }
 
+.nav ul li {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
 .nav a {
   text-decoration: none;
   color: var(--text-color);
@@ -82,6 +88,7 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  height: var(--header-height);
 }
 
 .nav a::after {
@@ -89,7 +96,7 @@
   position: absolute;
   width: 0;
   height: 2px;
-  bottom: -5px;
+  bottom: 22px; /* Adjust to be closer to text */
   left: 0;
   background-color: var(--accent-color);
   transition: width var(--transition-speed) ease;
@@ -317,4 +324,59 @@
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+.nav-link-button {
+  background: none;
+  border: none;
+  color: var(--text-color);
+  font-size: inherit;
+  font-family: inherit;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: color 0.3s ease;
+  position: relative;
+  font-weight: 500;
+  height: var(--header-height);
+}
+
+.nav-link-button:hover {
+  color: var(--accent-color);
+}
+
+.nav-link-button::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: 22px; /* Match nav link position */
+  left: 0;
+  right: 0;
+  background-color: var(--accent-color);
+  transition: width var(--transition-speed) ease;
+}
+
+.nav-link-button:hover::after {
+  width: 100%;
+}
+
+/* Remove outline on focus */
+.nav-link-button:focus,
+.nav a:focus {
+  outline: none;
+}
+
+/* Update styles for both nav links and buttons */
+.nav a,
+.nav-link-button {
+  display: flex;
+  align-items: center;
+  height: var(--header-height);
+  font-weight: 500;
+  text-decoration: none;
+  color: var(--text-color);
+  transition: color var(--transition-speed) ease;
 }

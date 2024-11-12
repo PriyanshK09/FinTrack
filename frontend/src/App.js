@@ -9,6 +9,8 @@ import Reports from './components/Reports'
 import Investments from './components/Investments'
 import FinancialEducation from './components/FinancialEducation'
 import Premium from './components/Premium'
+import PremiumFeatures from './components/PremiumFeatures'
+import ContactSales from './components/ContactSales'
 import Footer from './components/Footer'
 import './styles/App.css'
 import { CurrencyProvider } from './context/CurrencyContext';
@@ -30,6 +32,8 @@ export default function App() {
               <Route path="/investments" element={<Investments />} />
               <Route path="/premium" element={<Premium />} />
               <Route path="/financial-education" element={<FinancialEducation />} />
+              <Route path="/premium-features" element={<PremiumFeatures />} />
+              <Route path="/contact" element={<ContactSales />} />
             </Routes>
             <Footer />
           </div>

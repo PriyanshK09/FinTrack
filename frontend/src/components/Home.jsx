@@ -2,11 +2,12 @@ import React, { useEffect, useState } from 'react'
 import { PieChart, Wallet, TrendingUp, Shield, Users, Gift, ChevronRight } from 'lucide-react'
 import '../styles/Home.css'
 import axios from 'axios'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 
 export default function Home() {
   const [userData, setUserData] = useState(null);
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -25,6 +26,18 @@ export default function Home() {
 
     fetchUserData();
   }, []);
+
+  useEffect(() => {
+    // Check for scroll target in navigation state
+    if (location.state?.scrollTo) {
+      const element = document.getElementById(location.state.scrollTo);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+        // Clean up the state
+        navigate('/', {}, { replace: true });
+      }
+    }
+  }, [location]);
 
   const handleStartTrial = () => {
     if (userData) {

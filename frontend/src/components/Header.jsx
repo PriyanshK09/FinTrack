@@ -15,6 +15,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import '../styles/Header.css';
 import { useAuth } from '../context/AuthContext'; // Fixed import path
+import { useScrollNavigation } from '../hooks/useScrollNavigation';
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -24,6 +25,7 @@ export default function Header() {
   const { isAuthenticated, setIsAuthenticated, userData, setUserData } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const { handleNavigation } = useScrollNavigation();
 
   useEffect(() => {
     let lastScrollY = window.pageYOffset;
@@ -89,10 +91,35 @@ export default function Header() {
           <ul>
             {!isAuthenticated ? (
               <>
-                <li><Link to="/#features">Features</Link></li>
-                <li><Link to="/#testimonials">Testimonials</Link></li>
-                <li><Link to="/premium" className="premium-link"><Crown size={16} />Premium</Link></li>
-                <li><Link to="/#contact">Contact</Link></li>
+                <li>
+                  <button 
+                    className="nav-link-button" 
+                    onClick={() => handleNavigation('features')}
+                  >
+                    Features
+                  </button>
+                </li>
+                <li>
+                  <button 
+                    className="nav-link-button" 
+                    onClick={() => handleNavigation('testimonials')}
+                  >
+                    Testimonials
+                  </button>
+                </li>
+                <li>
+                  <Link to="/premium" className="premium-link">
+                    <Crown size={16} />Premium
+                  </Link>
+                </li>
+                <li>
+                  <button 
+                    className="nav-link-button" 
+                    onClick={() => navigate('/contact')} // Changed from handleNavigation to direct navigation
+                  >
+                    Contact
+                  </button>
+                </li>
               </>
             ) : (
               <>

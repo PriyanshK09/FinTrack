@@ -102,7 +102,7 @@ export default function Premium() {
                 </ul>
                 <button 
                   className={`upgrade-btn ${plan.recommended ? 'recommended' : ''}`}
-                  onClick={() => navigate('/checkout')}
+                  onClick={() => navigate('/premium-features')}
                 >
                   Get Started <ChevronRight size={16} />
                 </button>
