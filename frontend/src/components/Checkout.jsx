@@ -11,7 +11,7 @@ export default function Checkout() {
   const navigate = useNavigate();
   const location = useLocation();
   const { currency } = useCurrency();
-  const { userData } = useAuth();
+  const { userData, fetchUser } = useAuth();  // Add fetchUser
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
@@ -58,7 +58,7 @@ export default function Checkout() {
         key: razorpayKeyId,
         amount: response.data.amount,
         currency: "INR",
-        name: "FinanceTrack",
+        name: "FinTrack", // Changed from FinanceTrack
         description: "Premium Plan Subscription",
         order_id: response.data.id,
         prefill: {
@@ -79,6 +79,10 @@ export default function Checkout() {
               },
               { headers: { Authorization: `Bearer ${token}` }}
             );
+
+            // Add this: Refresh user data to get updated premium status
+            await fetchUser();
+
             setSuccess(true);
             setTimeout(() => {
               navigate('/dashboard');

@@ -9,7 +9,7 @@ export default function Footer() {
         <div className="footer-section brand">
           <div className="logo">
             <DollarSign size={28} />
-            <h3>FinanceTrack</h3>
+            <h3>FinTrack</h3>
           </div>
           <p>Empowering your financial journey</p>
           <div className="social-icons">

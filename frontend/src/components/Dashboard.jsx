@@ -1,7 +1,8 @@
+import { useNavigate } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import { 
   User, Settings, DollarSign, Globe, Lock, Mail, 
-  Save, AlertCircle, CheckCircle
+  Save, AlertCircle, CheckCircle, Crown, Star, X
 } from 'lucide-react';
 import cc from 'currency-codes';
 import countryCodeList from 'country-codes-list';
@@ -11,6 +12,7 @@ import '../styles/Dashboard.css';
 import { useCurrency } from '../context/CurrencyContext';
 
 export default function Dashboard() {
+  const navigate = useNavigate();
   const [userData, setUserData] = useState(null);
   const [settings, setSettings] = useState({
     currency: { code: 'INR', symbol: '₹' },
@@ -178,6 +180,33 @@ export default function Dashboard() {
     }
   };
 
+  // Add to the existing handlers in Dashboard.jsx
+  const handleCancelMembership = async () => {
+    try {
+      const token = localStorage.getItem('authToken');
+      await axios.post(
+        'http://localhost:5000/api/users/cancel-premium',
+        {},
+        { headers: { Authorization: `Bearer ${token}` }}
+      );
+      
+      // Update local user data
+      const updatedUserData = {
+        ...userData,
+        isPremium: false,
+        subscription: {
+          status: 'inactive',
+          plan: 'basic',
+          endDate: null
+        }
+      };
+      setUserData(updatedUserData);
+      setMessage({ text: 'Premium membership cancelled successfully', type: 'success' });
+    } catch (error) {
+      setMessage({ text: 'Failed to cancel membership', type: 'error' });
+    }
+  };
+
   if (loading) {
     return <div className="loading">Loading...</div>;
   }
@@ -314,6 +343,52 @@ export default function Dashboard() {
                 <Save size={16} /> Update Password
               </button>
             </form>
+          </section>
+
+          <section className="premium-status-section card">
+            <h2><Crown size={20} /> Account Status</h2>
+            <div className="status-info">
+              <div className="status-badge">
+                {userData?.isPremium ? (
+                  <div className="premium-active">
+                    <Crown size={24} />
+                    <span>Premium Active</span>
+                  </div>
+                ) : (
+                  <div className="premium-inactive">
+                    <Star size={24} />
+                    <span>Basic Plan</span>
+                  </div>
+                )}
+              </div>
+              {userData?.isPremium && (
+                <>
+                  <div className="subscription-details">
+                    <p><strong>Plan:</strong> Pro</p>
+                    <p><strong>Status:</strong> Active</p>
+                    <p><strong>Next billing:</strong> {new Date(userData?.subscription?.endDate).toLocaleDateString()}</p>
+                  </div>
+                  <button 
+                    className="cancel-btn"
+                    onClick={() => {
+                      if (window.confirm('Warning: Canceling your premium membership is permanent and no refund will be provided. Do you want to continue?')) {
+                        handleCancelMembership();
+                      }
+                    }}
+                  >
+                    <X size={16} /> Cancel Membership
+                  </button>
+                </>
+              )}
+              {!userData?.isPremium && (
+                <button 
+                  className="upgrade-btn"
+                  onClick={() => navigate('/premium')}
+                >
+                  <Crown size={16} /> Upgrade to Premium
+                </button>
+              )}
+            </div>
           </section>
         </div>
       </motion.main>

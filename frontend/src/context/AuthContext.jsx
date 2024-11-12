@@ -28,12 +28,14 @@ export const AuthProvider = ({ children }) => {
 
   const fetchUser = async () => {
     try {
-      const response = await fetch('/api/users/me');
-      const data = await response.json();
-      setUser({
-        ...data,
-        isPremium: data.isPremium || false
+      const token = localStorage.getItem('authToken');
+      if (!token) return;
+
+      const response = await axios.get('http://localhost:5000/api/auth/user', {
+        headers: { Authorization: `Bearer ${token}` }
       });
+
+      setUserData(response.data);
     } catch (error) {
       console.error('Error fetching user:', error);
     }

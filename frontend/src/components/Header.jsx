@@ -22,7 +22,7 @@ export default function Header() {
   const [scrollState, setScrollState] = useState('top');
   const [showUserMenu, setShowUserMenu] = useState(false);
   const userMenuRef = useRef(null);
-  const { isAuthenticated, setIsAuthenticated, userData, setUserData, user } = useAuth();
+  const { isAuthenticated, setIsAuthenticated, userData, setUserData, user, fetchUser } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const { handleNavigation } = useScrollNavigation();
@@ -56,6 +56,12 @@ export default function Header() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  useEffect(() => {
+    if (isAuthenticated) {
+      fetchUser(); // Fetch fresh user data when header mounts
+    }
+  }, [isAuthenticated]);
+
   const handleLogout = async () => {
     try {
       const token = localStorage.getItem('authToken');
@@ -84,10 +90,12 @@ export default function Header() {
       <div className="header-content">
         <div className="logo" onClick={() => navigate('/')}>
           <DollarSign size={28} />
-          <h1>FinanceTrack</h1>
-          {user?.isPremium && (
-            <span className="pro-badge">PRO</span>
-          )}
+          <h1>
+            FinTrack
+            {userData?.isPremium && (
+              <span className="pro-badge">PRO</span>
+            )}
+          </h1>
         </div>
         
         <nav className={`nav ${isMenuOpen ? 'nav-open' : ''}`}>

@@ -63,7 +63,7 @@ export default function Login() {
       <div className="login-card">
         <div className="login-header">
           <DollarSign size={24} />
-          <h1>FinanceTrack</h1>
+          <h1>FinTrack</h1>
         </div>
         <h2>{isLogin ? 'Welcome Back' : 'Create Account'}</h2>
         {error && <div className="error-message">{error}</div>}

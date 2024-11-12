@@ -54,7 +54,7 @@ export default function Home() {
       <section className="hero">
         <div className="hero-content">
           <h1>Master Your Finances</h1>
-          <p>Empower your financial journey with FinanceTrack - Your all-in-one solution for budgeting, tracking, and growing your wealth.</p>
+          <p>Empower your financial journey with FinTrack - Your all-in-one solution for budgeting, tracking, and growing your wealth.</p>
           <button className="cta-button" onClick={handleStartTrial}>
             Get Started
             <ChevronRight size={20} />
@@ -113,7 +113,7 @@ export default function Home() {
         <div className="testimonial-grid">
           <div className="testimonial-card">
             <div className="quote">"</div>
-            <p>FinanceTrack has completely transformed how I manage my money. I've never felt more in control of my finances!</p>
+            <p>FinTrack has completely transformed how I manage my money. I've never felt more in control of my finances!</p>
             <div className="testimonial-author">
               <img src="/placeholder.svg?height=50&width=50" alt="Sarah J." className="author-image" />
               <div>
@@ -135,7 +135,7 @@ export default function Home() {
           </div>
           <div className="testimonial-card">
             <div className="quote">"</div>
-            <p>As a freelancer, budgeting was always a challenge. FinanceTrack made it simple and even enjoyable!</p>
+            <p>As a freelancer, budgeting was always a challenge. FinTrack made it simple and even enjoyable!</p>
             <div className="testimonial-author">
               <img src="/placeholder.svg?height=50&width=50" alt="Emily T." className="author-image" />
               <div>
@@ -149,7 +149,7 @@ export default function Home() {
 
       <section className="cta">
         <h2>Ready to Transform Your Financial Life?</h2>
-        <p>Join over 100,000 users who have taken control of their finances with FinanceTrack</p>
+        <p>Join over 100,000 users who have taken control of their finances with FinTrack</p>
         <button className="cta-button" onClick={handleStartTrial}>
           Start Your Free 30-Day Trial
           <ChevronRight size={20} />
