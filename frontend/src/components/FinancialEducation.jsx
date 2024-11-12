@@ -1,19 +1,443 @@
 "use client"
 
 import React, { useState, useEffect } from 'react'
-import { Book, CheckCircle, Award, BarChart, DollarSign, PieChart, TrendingUp, Briefcase, GraduationCap, Lightbulb, ArrowRight, Lock } from 'lucide-react'
+import { Book, CheckCircle, Award, BarChart, DollarSign, PieChart, TrendingUp, Briefcase, GraduationCap, Lightbulb, ArrowRight, Lock, Clock, Shield, Home } from 'lucide-react'
 import '../styles/FinancialEducation.css'
 
 const topics = [
-  { id: 1, title: "Budgeting Basics", icon: PieChart, description: "Learn how to create and stick to a budget" },
-  { id: 2, title: "Understanding Credit Scores", icon: BarChart, description: "Discover what impacts your credit score and how to improve it" },
-  { id: 3, title: "Introduction to Investing", icon: TrendingUp, description: "Get started with investing fundamentals" },
-  { id: 4, title: "Retirement Planning 101", icon: Briefcase, description: "Plan for a secure financial future" },
-  { id: 5, title: "Tax Essentials", icon: Book, description: "Understand the basics of taxes and deductions" },
-  { id: 6, title: "Emergency Fund Strategies", icon: DollarSign, description: "Learn how to build and maintain an emergency fund" },
-  { id: 7, title: "Debt Management", icon: Award, description: "Strategies for managing and reducing debt" },
-  { id: 8, title: "Financial Goal Setting", icon: GraduationCap, description: "Set and achieve your financial goals" },
-]
+  {
+    id: 1,
+    title: "Budgeting Basics",
+    icon: PieChart,
+    description: "Learn how to create and stick to a budget",
+    content: {
+      sections: [
+        {
+          title: "Understanding Income & Expenses",
+          points: [
+            "Track your monthly income sources (salary, investments, side gigs)",
+            "Categorize your essential expenses (housing, utilities, food)",
+            "Identify discretionary spending (entertainment, shopping)",
+            "Calculate your net income after taxes and deductions"
+          ]
+        },
+        {
+          title: "50/30/20 Rule",
+          points: [
+            "50% for needs (housing, food, utilities, insurance)",
+            "30% for wants (entertainment, shopping, dining out)",
+            "20% for savings and debt repayment (emergency fund, investments)",
+            "Adjust percentages based on your financial situation"
+          ]
+        },
+        {
+          title: "Creating Your Budget",
+          points: [
+            "Use budgeting apps or spreadsheets to track expenses",
+            "Set realistic spending limits for each category",
+            "Review and adjust your budget monthly",
+            "Plan for irregular expenses and annual costs"
+          ]
+        }
+      ],
+      estimatedTime: "15 mins",
+      exercises: [
+        "Track all expenses for one week",
+        "Categorize your last month's spending",
+        "Create a basic monthly budget plan"
+      ]
+    }
+  },
+  {
+    id: 2,
+    title: "Understanding Credit Scores",
+    icon: BarChart,
+    description: "Discover what impacts your credit score and how to improve it",
+    content: {
+      sections: [
+        {
+          title: "Credit Score Factors",
+          points: [
+            "Payment history (35%) - Most important factor",
+            "Credit utilization (30%) - Amount of credit used",
+            "Length of credit history (15%) - Account age matters",
+            "Credit mix (10%) - Different types of credit",
+            "New credit (10%) - Recent applications"
+          ]
+        },
+        {
+          title: "Improvement Strategies",
+          points: [
+            "Pay bills on time, every time",
+            "Keep credit utilization below 30%",
+            "Maintain older credit accounts",
+            "Limit new credit applications",
+            "Monitor your credit report regularly"
+          ]
+        },
+        {
+          title: "Common Credit Myths",
+          points: [
+            "Checking your score doesn't hurt it",
+            "You don't need to carry a balance",
+            "Closing old accounts can hurt your score",
+            "Co-signing makes you equally responsible"
+          ]
+        }
+      ],
+      estimatedTime: "20 mins",
+      exercises: [
+        "Check your credit score",
+        "Review your credit report",
+        "Calculate your credit utilization"
+      ]
+    }
+  },
+  {
+    id: 3,
+    title: "Introduction to Investing",
+    icon: TrendingUp,
+    description: "Get started with investing fundamentals",
+    content: {
+      sections: [
+        {
+          title: "Investment Basics",
+          points: [
+            "Understanding different investment types (stocks, bonds, ETFs)",
+            "Risk vs. return relationship",
+            "Power of compound interest",
+            "Dollar-cost averaging strategy"
+          ]
+        },
+        {
+          title: "Building a Portfolio",
+          points: [
+            "Asset allocation basics",
+            "Diversification principles",
+            "Risk tolerance assessment",
+            "Long-term vs. short-term investing"
+          ]
+        },
+        {
+          title: "Getting Started",
+          points: [
+            "Choose a brokerage account",
+            "Research investment options",
+            "Start with index funds",
+            "Monitor and rebalance periodically"
+          ]
+        }
+      ],
+      estimatedTime: "25 mins",
+      exercises: [
+        "Calculate compound interest scenarios",
+        "Create a sample portfolio allocation",
+        "Compare different index funds"
+      ]
+    }
+  },
+  {
+    id: 4,
+    title: "Retirement Planning 101",
+    icon: Briefcase,
+    description: "Plan for a secure financial future",
+    content: {
+      sections: [
+        {
+          title: "Retirement Accounts",
+          points: [
+            "Traditional IRA vs. Roth IRA",
+            "401(k) and employer matching",
+            "Contribution limits and deadlines",
+            "Tax advantages and implications"
+          ]
+        },
+        {
+          title: "Calculating Needs",
+          points: [
+            "Estimate retirement expenses",
+            "Consider inflation impact",
+            "Account for healthcare costs",
+            "Social Security benefits overview"
+          ]
+        },
+        {
+          title: "Investment Strategy",
+          points: [
+            "Age-based asset allocation",
+            "Target date funds explained",
+            "Risk adjustment over time",
+            "Required minimum distributions"
+          ]
+        }
+      ],
+      estimatedTime: "30 mins",
+      exercises: [
+        "Calculate retirement savings need",
+        "Review current retirement accounts",
+        "Create retirement timeline"
+      ]
+    }
+  },
+  {
+    id: 5,
+    title: "Tax Essentials",
+    icon: Book,
+    description: "Understand the basics of taxes and deductions",
+    content: {
+      sections: [
+        {
+          title: "Tax Basics",
+          points: [
+            "Understanding tax brackets and marginal rates",
+            "Different types of taxable income",
+            "Standard vs. itemized deductions",
+            "Filing status options and implications"
+          ]
+        },
+        {
+          title: "Common Deductions",
+          points: [
+            "Mortgage interest and property taxes",
+            "Charitable contributions",
+            "Business expenses and home office",
+            "Education-related deductions"
+          ]
+        },
+        {
+          title: "Tax Planning",
+          points: [
+            "Tax-advantaged accounts (401k, IRA, HSA)",
+            "Tax loss harvesting strategies",
+            "Quarterly estimated payments",
+            "Record keeping best practices"
+          ]
+        }
+      ],
+      estimatedTime: "25 mins",
+      exercises: [
+        "Review last year's tax return",
+        "Identify potential deductions",
+        "Create tax document organization system"
+      ]
+    }
+  },
+  {
+    id: 6,
+    title: "Emergency Fund Strategies",
+    icon: DollarSign,
+    description: "Build and maintain your financial safety net",
+    content: {
+      sections: [
+        {
+          title: "Fund Basics",
+          points: [
+            "Why you need 3-6 months of expenses saved",
+            "Where to keep emergency funds (high-yield savings)",
+            "What constitutes a true emergency",
+            "How to determine your target amount"
+          ]
+        },
+        {
+          title: "Building Your Fund",
+          points: [
+            "Start small with achievable goals",
+            "Automate regular contributions",
+            "Find extra money in your budget",
+            "Use windfalls wisely (tax returns, bonuses)"
+          ]
+        },
+        {
+          title: "Managing Your Fund",
+          points: [
+            "When to use emergency funds",
+            "How to replenish after using",
+            "Regular review and adjustment",
+            "Avoiding common pitfalls"
+          ]
+        }
+      ],
+      estimatedTime: "20 mins",
+      exercises: [
+        "Calculate your target emergency fund amount",
+        "Set up automatic savings transfers",
+        "Create emergency fund usage guidelines"
+      ]
+    }
+  },
+  {
+    id: 7,
+    title: "Debt Management",
+    icon: Award,
+    description: "Strategies for managing and reducing debt",
+    content: {
+      sections: [
+        {
+          title: "Understanding Debt",
+          points: [
+            "Good debt vs. bad debt",
+            "Interest rates and compound interest",
+            "Credit utilization impact",
+            "Debt-to-income ratio importance"
+          ]
+        },
+        {
+          title: "Repayment Strategies",
+          points: [
+            "Avalanche method (highest interest first)",
+            "Snowball method (smallest balance first)",
+            "Debt consolidation options",
+            "Balance transfer considerations"
+          ]
+        },
+        {
+          title: "Avoiding Future Debt",
+          points: [
+            "Creating a debt prevention plan",
+            "Emergency fund importance",
+            "Lifestyle inflation awareness",
+            "Using credit responsibly"
+          ]
+        }
+      ],
+      estimatedTime: "30 mins",
+      exercises: [
+        "List all debts with interest rates",
+        "Create a debt payoff timeline",
+        "Calculate potential interest savings"
+      ]
+    }
+  },
+  {
+    id: 8,
+    title: "Insurance Planning",
+    icon: Shield,
+    description: "Protect yourself and your assets",
+    content: {
+      sections: [
+        {
+          title: "Types of Insurance",
+          points: [
+            "Health insurance essentials",
+            "Life insurance options",
+            "Property and casualty coverage",
+            "Disability insurance importance"
+          ]
+        },
+        {
+          title: "Coverage Assessment",
+          points: [
+            "Evaluating insurance needs",
+            "Understanding policy terms",
+            "Deductibles and premiums",
+            "Gap coverage considerations"
+          ]
+        },
+        {
+          title: "Cost Management",
+          points: [
+            "Shopping for better rates",
+            "Bundling policies",
+            "Maintaining good records",
+            "Regular policy reviews"
+          ]
+        }
+      ],
+      estimatedTime: "25 mins",
+      exercises: [
+        "Review current insurance policies",
+        "Identify coverage gaps",
+        "Compare insurance quotes"
+      ]
+    }
+  },
+  {
+    id: 9,
+    title: "Real Estate Basics",
+    icon: Home,
+    description: "Understanding property investment and ownership",
+    content: {
+      sections: [
+        {
+          title: "Home Buying Process",
+          points: [
+            "Mortgage types and requirements",
+            "Down payment considerations",
+            "Property assessment factors",
+            "Closing costs and processes"
+          ]
+        },
+        {
+          title: "Property Investment",
+          points: [
+            "Rental property economics",
+            "REITs and real estate funds",
+            "Property appreciation factors",
+            "Tax implications and benefits"
+          ]
+        },
+        {
+          title: "Property Management",
+          points: [
+            "Maintenance and repairs",
+            "Insurance requirements",
+            "Tenant relationships",
+            "Property tax considerations"
+          ]
+        }
+      ],
+      estimatedTime: "35 mins",
+      exercises: [
+        "Calculate home affordability",
+        "Compare rent vs. buy scenarios",
+        "Research local property markets"
+      ]
+    }
+  },
+  {
+    id: 10,
+    title: "Personal Finance Security",
+    icon: Lock,
+    description: "Protect your financial information and identity",
+    content: {
+      sections: [
+        {
+          title: "Digital Security",
+          points: [
+            "Strong password practices",
+            "Two-factor authentication",
+            "Secure online banking",
+            "Safe shopping habits"
+          ]
+        },
+        {
+          title: "Identity Protection",
+          points: [
+            "Credit monitoring services",
+            "Fraud alerts and freezes",
+            "Document security",
+            "Privacy best practices"
+          ]
+        },
+        {
+          title: "Scam Prevention",
+          points: [
+            "Common financial scams",
+            "Red flags to watch for",
+            "Reporting suspicious activity",
+            "Recovery steps if compromised"
+          ]
+        }
+      ],
+      estimatedTime: "20 mins",
+      exercises: [
+        "Security audit of financial accounts",
+        "Set up credit monitoring",
+        "Create secure password system"
+      ]
+    }
+  }
+];
 
 const quizQuestions = [
   {
@@ -90,6 +514,7 @@ export default function FinancialEducation() {
   const [resources, setResources] = useState([])
   const [activeTip, setActiveTip] = useState(0)
   const [quizAttempted, setQuizAttempted] = useState(false)
+  const [selectedTopic, setSelectedTopic] = useState(null)
 
   useEffect(() => {
     const savedProgress = localStorage.getItem('financialEducationProgress')
@@ -138,6 +563,10 @@ export default function FinancialEducation() {
     }
   }
 
+  const handleTopicClick = (topic) => {
+    setSelectedTopic(topic);
+  };
+
   return (
     <div className="financial-education-container">
       <main className="financial-education-main">
@@ -161,6 +590,7 @@ export default function FinancialEducation() {
               <div 
                 key={topic.id} 
                 className={`topic-card ${completedTopics.includes(topic.id) ? 'completed' : ''}`}
+                onClick={() => handleTopicClick(topic)}
               >
                 <topic.icon className="topic-icon" />
                 <h3 className="topic-title">{topic.title}</h3>
@@ -257,6 +687,54 @@ export default function FinancialEducation() {
           </div>
         </section>
       </main>
+      {selectedTopic && (
+        <div className="modal-overlay" onClick={() => setSelectedTopic(null)}>
+          <div className="topic-modal" onClick={e => e.stopPropagation()}>
+            <button className="close-modal" onClick={() => setSelectedTopic(null)}>×</button>
+            <div className="modal-header">
+              <selectedTopic.icon className="modal-icon" />
+              <h2>{selectedTopic.title}</h2>
+            </div>
+            <p className="modal-description">{selectedTopic.description}</p>
+            
+            {selectedTopic.content && (
+              <div className="modal-content">
+                <div className="time-indicator">
+                  <Clock size={16} />
+                  <span>{selectedTopic.content.estimatedTime}</span>
+                </div>
+                
+                <div className="content-sections">
+                  {selectedTopic.content.sections?.map((section, idx) => (
+                    <div key={idx} className="content-section">
+                      <h3>{section.title}</h3>
+                      <ul>
+                        {section.points.map((point, i) => (
+                          <li key={i}>{point}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+            
+            <div className="modal-footer">
+              {!completedTopics.includes(selectedTopic.id) && (
+                <button 
+                  className="btn primary-btn"
+                  onClick={() => {
+                    markTopicComplete(selectedTopic.id);
+                    setSelectedTopic(null);
+                  }}
+                >
+                  Mark as Complete
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
