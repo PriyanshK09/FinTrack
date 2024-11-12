@@ -1,16 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { 
   TrendingUp, Shield, Gift, Bell, ChevronRight, 
   PieChart, BarChart2, Users, Zap, Lock,
-  BookOpen, ArrowRight, Crown, Check // Added Check icon
+  BookOpen, ArrowRight, Crown, Check
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext';
 import '../styles/PremiumFeatures.css';
 
 export default function PremiumFeatures() {
   const navigate = useNavigate();
   const [activeFeature, setActiveFeature] = useState(0);
+  const { userData } = useContext(AuthContext);
 
   const features = [
     {
@@ -66,28 +68,43 @@ export default function PremiumFeatures() {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.7 }}
       >
-        <motion.section 
-          className="features-hero"
-          initial={{ y: 50, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-        >
-          <motion.div
-            animate={{ 
-              y: [0, -10, 0],
-              rotateZ: [0, -5, 5, 0]
-            }}
-            transition={{ 
-              duration: 5,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
+        {userData?.isPremium ? (
+          <motion.section 
+            className="premium-achievement-features"
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.5 }}
           >
-            <Crown className="hero-icon" />
-          </motion.div>
-          <h1>Premium Features</h1>
-          <p>Unlock the full potential of your financial journey</p>
-        </motion.section>
+            <div className="achievement-content">
+              <Crown className="achievement-icon" size={64} />
+              <h1>Premium Features Unlocked!</h1>
+              <p>You have access to all premium features. Explore them below!</p>
+            </div>
+          </motion.section>
+        ) : (
+          <motion.section 
+            className="features-hero"
+            initial={{ y: 50, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+          >
+            <motion.div
+              animate={{ 
+                y: [0, -10, 0],
+                rotateZ: [0, -5, 5, 0]
+              }}
+              transition={{ 
+                duration: 5,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+            >
+              <Crown className="hero-icon" />
+            </motion.div>
+            <h1>Premium Features</h1>
+            <p>Unlock the full potential of your financial journey</p>
+          </motion.section>
+        )}
 
         {/* Rest of the sections with enhanced animations */}
         <section className="features-showcase">
@@ -163,32 +180,54 @@ export default function PremiumFeatures() {
           transition={{ duration: 0.7, delay: 0.3 }}
         >
           <div className="cta-content">
-            <h2>Ready to Get Started?</h2>
-            <p>Join our premium members and take control of your finances today!</p>
-            <div className="cta-buttons">
-              <motion.button
-                className="primary-btn"
-                onClick={() => navigate('/checkout')}
-                whileHover={{ 
-                  scale: 1.05,
-                  boxShadow: "0 10px 20px rgba(230,126,34,0.3)"
-                }}
-                whileTap={{ scale: 0.95 }}
-              >
-                Upgrade Now <ChevronRight size={20} />
-              </motion.button>
-              <motion.button
-                className="secondary-btn"
-                onClick={() => navigate('/contact')}
-                whileHover={{ 
-                  scale: 1.05,
-                  boxShadow: "var(--card-shadow)"
-                }}
-                whileTap={{ scale: 0.95 }}
-              >
-                Contact Sales
-              </motion.button>
-            </div>
+            {userData?.isPremium ? (
+              <>
+                <h2>Explore Your Premium Benefits</h2>
+                <p>Make the most of your premium membership by exploring all available features</p>
+                <div className="cta-buttons">
+                  <motion.button
+                    className="primary-btn"
+                    onClick={() => navigate('/dashboard')}
+                    whileHover={{ 
+                      scale: 1.05,
+                      boxShadow: "0 10px 20px rgba(230,126,34,0.3)"
+                    }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    Go to Dashboard <ArrowRight size={20} />
+                  </motion.button>
+                </div>
+              </>
+            ) : (
+              <>
+                <h2>Ready to Get Started?</h2>
+                <p>Join our premium members and take control of your finances today!</p>
+                <div className="cta-buttons">
+                  <motion.button
+                    className="primary-btn"
+                    onClick={() => navigate('/checkout')}
+                    whileHover={{ 
+                      scale: 1.05,
+                      boxShadow: "0 10px 20px rgba(230,126,34,0.3)"
+                    }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    Upgrade Now <ChevronRight size={20} />
+                  </motion.button>
+                  <motion.button
+                    className="secondary-btn"
+                    onClick={() => navigate('/contact')}
+                    whileHover={{ 
+                      scale: 1.05,
+                      boxShadow: "var(--card-shadow)"
+                    }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    Contact Sales
+                  </motion.button>
+                </div>
+              </>
+            )}
           </div>
         </motion.section>
       </motion.main>
