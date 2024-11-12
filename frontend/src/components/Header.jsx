@@ -22,7 +22,7 @@ export default function Header() {
   const [scrollState, setScrollState] = useState('top');
   const [showUserMenu, setShowUserMenu] = useState(false);
   const userMenuRef = useRef(null);
-  const { isAuthenticated, setIsAuthenticated, userData, setUserData, user, fetchUser } = useAuth();
+  const { isAuthenticated, setIsAuthenticated, userData, setUserData, fetchUser } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const { handleNavigation } = useScrollNavigation();
@@ -60,7 +60,7 @@ export default function Header() {
     if (isAuthenticated) {
       fetchUser(); // Fetch fresh user data when header mounts
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, fetchUser]);
 
   const handleLogout = async () => {
     try {

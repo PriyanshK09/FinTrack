@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { 
   User, Settings, DollarSign, Globe, Lock, Mail, 
   Save, AlertCircle, CheckCircle, Crown, Star, X
@@ -34,43 +34,7 @@ export default function Dashboard() {
   const [regions, setRegions] = useState([]);
   const { setCurrency } = useCurrency();
 
-  useEffect(() => {
-    const allCurrencies = cc.data.map(currency => ({
-      code: currency.code,
-      symbol: currency.symbol || currency.code,
-      name: currency.currency
-    }));
-    
-    // Move INR to top of list
-    const inr = allCurrencies.find(c => c.code === 'INR');
-    const otherCurrencies = allCurrencies.filter(c => c.code !== 'INR');
-    setCurrencies([inr, ...otherCurrencies]);
-
-    // Move India to top of regions list  
-    const countryData = countryCodeList.customList('countryCode', '{countryNameEn}');
-    const allRegions = Object.entries(countryData).map(([code, name]) => ({
-      code,
-      name
-    }));
-    const india = allRegions.find(r => r.code === 'IN');
-    const otherRegions = allRegions.filter(r => r.code !== 'IN');
-    setRegions([india, ...otherRegions]);
-
-    fetchUserData();
-  }, []);
-
-  // Add this useEffect after other useEffects
-  useEffect(() => {
-    if (message.text) {
-      const timer = setTimeout(() => {
-        setMessage({ text: '', type: '' });
-      }, 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [message.text]);
-
-  // Update fetchUserData function
-  const fetchUserData = async () => {
+  const fetchUserData = useCallback(async () => {
     try {
       const token = localStorage.getItem('authToken');
       const response = await axios.get('http://localhost:5000/api/auth/user', {
@@ -95,7 +59,42 @@ export default function Dashboard() {
       setMessage({ text: 'Failed to fetch user data', type: 'error' });
       setLoading(false);
     }
-  };
+  }, [setCurrency]);
+
+  useEffect(() => {
+    const allCurrencies = cc.data.map(currency => ({
+      code: currency.code,
+      symbol: currency.symbol || currency.code,
+      name: currency.currency
+    }));
+    
+    // Move INR to top of list
+    const inr = allCurrencies.find(c => c.code === 'INR');
+    const otherCurrencies = allCurrencies.filter(c => c.code !== 'INR');
+    setCurrencies([inr, ...otherCurrencies]);
+
+    // Move India to top of regions list  
+    const countryData = countryCodeList.customList('countryCode', '{countryNameEn}');
+    const allRegions = Object.entries(countryData).map(([code, name]) => ({
+      code,
+      name
+    }));
+    const india = allRegions.find(r => r.code === 'IN');
+    const otherRegions = allRegions.filter(r => r.code !== 'IN');
+    setRegions([india, ...otherRegions]);
+
+    fetchUserData();
+  }, [fetchUserData]);
+
+  // Add this useEffect after other useEffects
+  useEffect(() => {
+    if (message.text) {
+      const timer = setTimeout(() => {
+        setMessage({ text: '', type: '' });
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [message.text]);
 
   // Update handleSettingsUpdate function
   const handleSettingsUpdate = async (setting, value, additionalData = {}) => {

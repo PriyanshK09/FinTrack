@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState, useEffect } from 'react'
-import { Book, CheckCircle, Award, BarChart, DollarSign, PieChart, TrendingUp, Briefcase, GraduationCap, Lightbulb, ArrowRight, Lock, Clock, Shield, Home } from 'lucide-react'
+import { Book, CheckCircle, Award, BarChart, DollarSign, PieChart, TrendingUp, Briefcase, Lightbulb, ArrowRight, Lock, Clock, Shield, Home } from 'lucide-react'
 import '../styles/FinancialEducation.css'
 
 const topics = [

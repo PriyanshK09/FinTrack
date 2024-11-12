@@ -67,3 +67,30 @@ exports.cancelPremium = async (req, res) => {
     res.status(500).json({ message: 'Error cancelling premium membership' });
   }
 };
+
+exports.updateProfile = async (req, res) => {
+  try {
+    const { name, email } = req.body;
+    const updateData = {};
+
+    if (name) updateData.name = name;
+    if (email) updateData.email = email;
+
+    const user = await User.findByIdAndUpdate(
+      req.user.id,
+      { $set: updateData },
+      { new: true, runValidators: true }
+    ).select('-password');
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.json({
+      message: 'Profile updated successfully',
+      user,
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Error updating profile' });
+  }
+};

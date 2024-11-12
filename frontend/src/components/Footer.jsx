@@ -13,10 +13,10 @@ export default function Footer() {
           </div>
           <p>Empowering your financial journey</p>
           <div className="social-icons">
-            <a href="#" aria-label="Facebook"><Facebook size={20} /></a>
-            <a href="#" aria-label="Twitter"><Twitter size={20} /></a>
-            <a href="#" aria-label="Instagram"><Instagram size={20} /></a>
-            <a href="#" aria-label="LinkedIn"><Linkedin size={20} /></a>
+            <a href="/" aria-label="Facebook"><Facebook size={20} /></a>
+            <a href="/" aria-label="Twitter"><Twitter size={20} /></a>
+            <a href="https://www.instagram.com/mrpriyanshuniverse/" aria-label="Instagram"><Instagram size={20} /></a>
+            <a href="https://www.linkedin.com/in/priyanshk09/" aria-label="LinkedIn"><Linkedin size={20} /></a>
           </div>
         </div>
         <div className="footer-section">
@@ -31,9 +31,9 @@ export default function Footer() {
         <div className="footer-section">
           <h3>Legal</h3>
           <ul>
-            <li><a href="#">Privacy Policy</a></li>
-            <li><a href="#">Terms of Service</a></li>
-            <li><a href="#">Cookie Policy</a></li>
+            <li><a href="/">Privacy Policy</a></li>
+            <li><a href="/">Terms of Service</a></li>
+            <li><a href="/">Cookie Policy</a></li>
           </ul>
         </div>
         <div className="footer-section">

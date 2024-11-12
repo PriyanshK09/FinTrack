@@ -1,8 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { 
-  TrendingUp, Shield, Gift, Bell, ChevronRight, 
-  PieChart, BarChart2, Users, Zap, Lock,
-  BookOpen, ArrowRight, Crown, Check
+  TrendingUp, Shield, Gift, Bell, ChevronRight, ArrowRight, Crown, Check
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';

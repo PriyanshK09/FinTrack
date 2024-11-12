@@ -3,14 +3,14 @@
 import React, { useState, useEffect } from 'react'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line, AreaChart, Area } from 'recharts'
 import { motion } from 'framer-motion'
-import { TrendingUp, DollarSign, PieChart as PieChartIcon, BarChart as BarChartIcon, Calendar, ArrowUpCircle, ArrowDownCircle, TrendingDown, Target, ChevronDown, ChevronUp } from 'lucide-react'
+import { TrendingUp, DollarSign, Calendar, ArrowUpCircle, ArrowDownCircle, TrendingDown, Target, ChevronDown, ChevronUp } from 'lucide-react'
 import axios from 'axios'
 import { format } from 'date-fns'
 import '../styles/Reports.css'
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8', '#82ca9d', '#a4de6c', '#d0ed57', '#ffc658']
 
-// Create new LoadingChart component
+// LoadingChart Component
 const LoadingChart = () => (
   <motion.div 
     className="loading-chart"
@@ -30,7 +30,6 @@ export default function Reports() {
   const [savingsRate, setSavingsRate] = useState(0)
   const [topExpenseCategories, setTopExpenseCategories] = useState([])
   const [netWorthData, setNetWorthData] = useState([])
-  const [budgetPerformance, setBudgetPerformance] = useState([])
   const [cashFlowData, setCashFlowData] = useState([])
   const [debtToIncomeRatio, setDebtToIncomeRatio] = useState(0)
   const [isLoading, setIsLoading] = useState(false)
@@ -39,6 +38,42 @@ export default function Reports() {
   const [isChartReady, setIsChartReady] = useState(false);
 
   useEffect(() => {
+    const fetchData = async (range) => {
+      setIsLoading(true)
+      setError(null)
+      
+      try {
+        const token = localStorage.getItem('authToken')
+        const dateRange = getDateRange(range)
+        
+        const response = await axios.get(
+          `http://localhost:5000/api/reports`, {
+            params: {
+              timeRange: range,
+              startDate: dateRange.startDate,
+              endDate: dateRange.endDate
+            },
+            headers: { Authorization: `Bearer ${token}` }
+          }
+        )
+
+        const data = response.data
+        setCategoryData(formatCategoryData(data.categoryData))
+        setTimeSeriesData(formatTimeSeriesData(data.timeSeriesData))
+        setSavingsRate(data.savingsRate)
+        setTopExpenseCategories(data.topExpenseCategories)
+        setNetWorthData(data.netWorthData)
+        setCashFlowData(data.cashFlowData)
+        setDebtToIncomeRatio(data.debtToIncomeRatio)
+        
+      } catch (error) {
+        setError(error.message || 'Failed to fetch report data')
+        console.error('Error fetching report data:', error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
     fetchData(timeRange)
   }, [timeRange])
 
@@ -71,43 +106,6 @@ export default function Reports() {
     return {
       startDate: format(start, 'yyyy-MM-dd'),
       endDate: format(now, 'yyyy-MM-dd')
-    }
-  }
-
-  const fetchData = async (range) => {
-    setIsLoading(true)
-    setError(null)
-    
-    try {
-      const token = localStorage.getItem('authToken')
-      const dateRange = getDateRange(range)
-      
-      const response = await axios.get(
-        `http://localhost:5000/api/reports`, {
-          params: {
-            timeRange: range,
-            startDate: dateRange.startDate,
-            endDate: dateRange.endDate
-          },
-          headers: { Authorization: `Bearer ${token}` }
-        }
-      )
-
-      const data = response.data
-      setCategoryData(formatCategoryData(data.categoryData))
-      setTimeSeriesData(formatTimeSeriesData(data.timeSeriesData))
-      setSavingsRate(data.savingsRate)
-      setTopExpenseCategories(data.topExpenseCategories)
-      setNetWorthData(data.netWorthData)
-      setBudgetPerformance(data.budgetPerformance)
-      setCashFlowData(data.cashFlowData)
-      setDebtToIncomeRatio(data.debtToIncomeRatio)
-      
-    } catch (error) {
-      setError(error.message || 'Failed to fetch report data')
-      console.error('Error fetching report data:', error)
-    } finally {
-      setIsLoading(false)
     }
   }
 

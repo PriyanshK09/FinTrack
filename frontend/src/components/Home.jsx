@@ -37,7 +37,7 @@ export default function Home() {
         navigate('/', {}, { replace: true });
       }
     }
-  }, [location]);
+  }, [location, navigate]);
 
   const handleStartTrial = () => {
     if (userData) {

@@ -1,7 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { 
-  Mail, Phone, MessageSquare, Send, 
-  Building, User, Check 
+  Mail, Phone, MessageSquare, Send, User, Check 
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import emailjs from '@emailjs/browser';

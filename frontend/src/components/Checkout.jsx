@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Shield, CreditCard, Check } from 'lucide-react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useCurrency } from '../context/CurrencyContext';
 import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
@@ -9,7 +9,6 @@ import '../styles/Checkout.css';
 
 export default function Checkout() {
   const navigate = useNavigate();
-  const location = useLocation();
   const { currency } = useCurrency();
   const { userData, fetchUser } = useAuth();  // Add fetchUser
   const [loading, setLoading] = useState(false);
