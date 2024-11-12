@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { 
-  Check, Star, Shield, Zap, Crown, Gift, ChevronRight, DollarSign, 
-  TrendingUp, Users, Bell 
+  Check, Star, Shield, Crown, Gift, ChevronRight, 
+  TrendingUp, Bell 
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
