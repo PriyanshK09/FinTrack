@@ -16,6 +16,7 @@ import './styles/App.css'
 import { CurrencyProvider } from './context/CurrencyContext';
 import { AuthProvider } from './context/AuthContext';
 import Checkout from './components/Checkout';
+import ComingSoon from './components/ComingSoon';
 
 export default function App() {
   return (
@@ -36,6 +37,7 @@ export default function App() {
               <Route path="/premium-features" element={<PremiumFeatures />} />
               <Route path="/contact" element={<ContactSales />} />
               <Route path="/checkout" element={<Checkout />} />
+              <Route path="/coming-soon" element={<ComingSoon />} />
             </Routes>
             <Footer />
           </div>

@@ -38,3 +38,32 @@ exports.getCurrentUser = async (req, res) => {
     res.status(500).json({ message: 'Error fetching user data' });
   }
 };
+
+exports.cancelPremium = async (req, res) => {
+  try {
+    const updatedUser = await User.findByIdAndUpdate(
+      req.user.id,
+      {
+        $set: {
+          isPremium: false,
+          'subscription.status': 'inactive',
+          'subscription.plan': 'basic',
+          'subscription.endDate': null
+        }
+      },
+      { new: true }
+    ).select('-password');
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.json({
+      message: 'Premium membership cancelled successfully',
+      user: updatedUser
+    });
+  } catch (error) {
+    console.error('Error cancelling premium:', error);
+    res.status(500).json({ message: 'Error cancelling premium membership' });
+  }
+};

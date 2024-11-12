@@ -37,7 +37,7 @@ app.use('/api/transactions', transactionRoutes);
 app.use('/api/goals', goalRoutes);
 app.use('/api/education', educationRoutes);
 app.use('/api/reports', reportRoutes);
-app.use('/api/users', userRoutes);
+app.use('/api/users', require('./routes/users'));
 app.use('/api/payment', paymentRoutes); // Add this line
 
 const PORT = process.env.PORT || 5000;

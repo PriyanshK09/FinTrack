@@ -35,7 +35,7 @@ export default function Reports() {
   const [debtToIncomeRatio, setDebtToIncomeRatio] = useState(0)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState(null)
-  const [isBudgetSummaryOpen, setIsBudgetSummaryOpen] = useState(true)
+  const [isBudgetSummaryOpen, setIsBudgetSummaryOpen] = useState(false)
   const [isChartReady, setIsChartReady] = useState(false);
 
   useEffect(() => {

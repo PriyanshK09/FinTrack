@@ -131,9 +131,17 @@ export default function Premium() {
                     </ul>
                     <button 
                       className={`upgrade-btn ${plan.recommended ? 'recommended' : ''}`}
-                      onClick={() => navigate('/premium-features')}
+                      onClick={() => {
+                        if (plan.name === 'Basic') {
+                          navigate('/');
+                        } else if (plan.name === 'Enterprise') {
+                          navigate('/coming-soon');
+                        } else {
+                          navigate('/premium-features');
+                        }
+                      }}
                     >
-                      Get Started <ChevronRight size={16} />
+                      {plan.name === 'Basic' ? 'Go to Home' : 'Get Started'} <ChevronRight size={16} />
                     </button>
                   </motion.div>
                 ))}
