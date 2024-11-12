@@ -1,27 +1,29 @@
-import React, { useState, useEffect } from 'react';
-import { DollarSign, Menu, X } from 'lucide-react';
-import '../styles/Header.css';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, useRef } from 'react';
+import { 
+  DollarSign, 
+  Menu, 
+  X, 
+  User,
+  LogOut,
+  ChevronDown,
+  PieChart,
+  BarChart2,
+  BookOpen,
+  Crown
+} from 'lucide-react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
+import '../styles/Header.css';
+import { useAuth } from '../context/AuthContext'; // Fixed import path
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrollState, setScrollState] = useState('top');
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [showUserMenu, setShowUserMenu] = useState(false);
+  const userMenuRef = useRef(null);
+  const { isAuthenticated, setIsAuthenticated, userData, setUserData } = useAuth();
   const navigate = useNavigate();
-
-  // Check authentication status on mount and token changes
-  useEffect(() => {
-    const checkAuth = () => {
-      const token = localStorage.getItem('authToken');
-      setIsAuthenticated(!!token);
-    };
-
-    checkAuth();
-    window.addEventListener('storage', checkAuth);
-    
-    return () => window.removeEventListener('storage', checkAuth);
-  }, []);
+  const location = useLocation();
 
   useEffect(() => {
     let lastScrollY = window.pageYOffset;
@@ -41,18 +43,31 @@ export default function Header() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [scrollState]);
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (userMenuRef.current && !userMenuRef.current.contains(event.target)) {
+        setShowUserMenu(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
   const handleLogout = async () => {
     try {
       const token = localStorage.getItem('authToken');
       if (!token) return;
 
-      await axios.post('http://localhost:5000/api/auth/logout', {}, { 
+      await axios.post('http://localhost:5000/api/auth/logout', {}, {
         headers: { Authorization: `Bearer ${token}` }
       });
       
       localStorage.removeItem('authToken');
       setIsAuthenticated(false);
-      navigate('/login');
+      setUserData(null);
+      setShowUserMenu(false);
+      navigate('/');
     } catch (err) {
       console.error('Logout failed', err);
     }
@@ -73,19 +88,26 @@ export default function Header() {
         <nav className={`nav ${isMenuOpen ? 'nav-open' : ''}`}>
           <ul>
             {!isAuthenticated ? (
-              // Public navigation items
               <>
-                <li><a href="#features">Features</a></li>
-                <li><a href="#testimonials">Testimonials</a></li>
-                <li><a href="#pricing">Pricing</a></li>
-                <li><a href="#contact">Contact</a></li>
+                <li><Link to="/#features">Features</Link></li>
+                <li><Link to="/#testimonials">Testimonials</Link></li>
+                <li><Link to="/premium" className="premium-link"><Crown size={16} />Premium</Link></li>
+                <li><Link to="/#contact">Contact</Link></li>
               </>
             ) : (
-              // Authenticated navigation items
               <>
-                <li><a href="/dashboard">Dashboard</a></li>
-                <li><a href="/reports">Reports</a></li>
-                <li><a href="/settings">Settings</a></li>
+                <li><Link to="/tracker" className={location.pathname === '/tracker' ? 'active' : ''}>
+                  <PieChart size={16} />Tracker
+                </Link></li>
+                <li><Link to="/reports" className={location.pathname === '/reports' ? 'active' : ''}>
+                  <BarChart2 size={16} />Reports
+                </Link></li>
+                <li><Link to="/financial-education" className={location.pathname === '/financial-education' ? 'active' : ''}>
+                  <BookOpen size={16} />Learn
+                </Link></li>
+                <li><Link to="/premium" className="premium-link">
+                  <Crown size={16} />Premium
+                </Link></li>
               </>
             )}
           </ul>
@@ -93,9 +115,30 @@ export default function Header() {
 
         <div className="auth-buttons">
           {isAuthenticated ? (
-            <button className="cta-button header-cta" onClick={handleLogout}>
-              Logout
-            </button>
+            <div className="user-menu" ref={userMenuRef}>
+              <button 
+                className="user-menu-button"
+                onClick={() => setShowUserMenu(!showUserMenu)}
+              >
+                <User size={20} />
+                <span>{userData?.name || 'User'}</span>
+                <ChevronDown size={16} />
+              </button>
+              
+              {showUserMenu && (
+                <div className="user-dropdown">
+                  <div className="user-greeting">
+                    Hello, {userData?.name || 'User'}!
+                  </div>
+                  <Link to="/dashboard" className="dropdown-item">
+                    <User size={16} />Profile
+                  </Link>
+                  <button onClick={handleLogout} className="dropdown-item logout">
+                    <LogOut size={16} />Logout
+                  </button>
+                </div>
+              )}
+            </div>
           ) : (
             <button className="cta-button header-cta" onClick={handleLogin}>
               Login

@@ -79,6 +79,9 @@
   font-weight: 500;
   transition: color var(--transition-speed) ease;
   position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .nav a::after {
@@ -122,6 +125,79 @@
 .auth-buttons {
   display: flex;
   gap: 1rem;
+}
+
+.active {
+  color: var(--accent-color);
+}
+
+.premium-link {
+  color: var(--accent-color);
+  font-weight: 600;
+}
+
+.user-menu {
+  position: relative;
+}
+
+.user-menu-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: none;
+  border: 1px solid var(--border-color);
+  border-radius: 25px;
+  color: var(--text-color);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.user-menu-button:hover {
+  background-color: var(--background-color);
+  border-color: var(--accent-color);
+}
+
+.user-dropdown {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  background: var(--card-background);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 200px;
+  overflow: hidden;
+  animation: slideDown 0.3s ease;
+}
+
+.user-greeting {
+  padding: 1rem;
+  background: linear-gradient(135deg, var(--primary-color), #2980b9);
+  color: white;
+  font-weight: 500;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  color: var(--text-color);
+  text-decoration: none;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+}
+
+.dropdown-item:hover {
+  background-color: var(--background-color);
+}
+
+.dropdown-item.logout {
+  color: #e74c3c;
 }
 
 @media (max-width: 1024px) {
@@ -230,4 +306,15 @@
 
 .header.up {
   animation: headerScrollUp var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

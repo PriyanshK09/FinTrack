@@ -3,6 +3,7 @@ import { DollarSign, Mail, Lock, User, ArrowRight, Apple, Github } from 'lucide-
 import '../styles/Login.css';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 export default function Login() {
   const [isLogin, setIsLogin] = useState(true);
@@ -12,6 +13,7 @@ export default function Login() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const { setIsAuthenticated, setUserData } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -22,6 +24,11 @@ export default function Login() {
         // Login request
         const response = await axios.post('http://localhost:5000/api/auth/login', { email, password });
         localStorage.setItem('authToken', response.data.token); // Save the token in localStorage
+        const userResponse = await axios.get('http://localhost:5000/api/auth/user', {
+          headers: { Authorization: `Bearer ${response.data.token}` }
+        });
+        setIsAuthenticated(true);
+        setUserData(userResponse.data);
         navigate('/'); // Redirect to the homepage after successful login
       } else {
         // Signup request

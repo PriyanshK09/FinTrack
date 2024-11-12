@@ -10,7 +10,8 @@ const investmentRoutes = require('./routes/investmentRoutes');
 const transactionRoutes = require('./routes/transactionRoutes');
 const goalRoutes = require('./routes/goalRoutes');
 const educationRoutes = require('./routes/educationRoutes');
-const reportRoutes = require('./routes/reportRoutes'); // Add this line
+const reportRoutes = require('./routes/reportRoutes');
+const userRoutes = require('./routes/users'); // Add this line
 
 const app = express();
 
@@ -23,6 +24,7 @@ app.use('/api/transactions', transactionRoutes);
 app.use('/api/goals', goalRoutes);
 app.use('/api/education', educationRoutes);
 app.use('/api/reports', reportRoutes);
+app.use('/api/users', userRoutes); // Add this line
 
 const PORT = process.env.PORT || 5000;
 

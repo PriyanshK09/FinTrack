@@ -1,13 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { PieChart, TrendingUp, Plus, Trash2, Calendar, Tag, Target, AlertCircle, Edit3 } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart as RePieChart, Pie, Cell } from 'recharts';
 import axios from 'axios';
 import '../styles/Tracker.css';
+import { useCurrency } from '../context/CurrencyContext';
+import { formatCurrency } from '../utils/currencyUtils';
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8'];
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
 export default function Tracker() {
+  const { currency } = useCurrency();
   const [transactions, setTransactions] = useState([]);
   const [newTransaction, setNewTransaction] = useState({
     description: '',
@@ -31,10 +34,45 @@ export default function Tracker() {
     fetchGoals();
   }, []);
 
+  const updateChartData = useCallback(() => {
+    const monthlyData = MONTHS.map(month => ({ name: month, income: 0, expenses: 0 }));
+    transactions.forEach(t => {
+      const month = new Date(t.date).getMonth();
+      if (t.type === 'income') {
+        monthlyData[month].income += t.amount;
+      } else {
+        monthlyData[month].expenses += t.amount;
+      }
+    });
+    setChartData(monthlyData);
+    
+    const categoryData = transactions
+      .filter(t => t.type === 'expense')
+      .reduce((acc, t) => {
+        acc[t.category] = (acc[t.category] || 0) + t.amount;
+        return acc;
+      }, {});
+    setPieChartData(Object.entries(categoryData).map(([name, value]) => ({ name, value })));
+  }, [transactions]);
+
+  const updateGoals = useCallback(() => {
+    setGoals(prevGoals => 
+      prevGoals.map(goal => {
+        const relevantTransactions = transactions.filter(t => 
+          t.category.toLowerCase() === goal.description.toLowerCase()
+        );
+        const totalAmount = relevantTransactions.reduce((sum, t) => 
+          t.type === 'income' ? sum + t.amount : sum - t.amount, 0
+        );
+        return { ...goal, current: goal.current + totalAmount };
+      })
+    );
+  }, [transactions]);
+
   useEffect(() => {
     updateChartData();
     updateGoals();
-  }, [transactions]);
+  }, [transactions, updateChartData, updateGoals]);
 
   const fetchTransactions = async () => {
     try {
@@ -58,40 +96,6 @@ export default function Tracker() {
     } catch (error) {
       console.error('Error fetching goals:', error);
     }
-  };
-
-  const updateChartData = () => {
-    const monthlyData = MONTHS.map(month => ({ name: month, income: 0, expenses: 0 }));
-    transactions.forEach(t => {
-      const month = new Date(t.date).getMonth();
-      if (t.type === 'income') {
-        monthlyData[month].income += t.amount;
-      } else {
-        monthlyData[month].expenses += t.amount;
-      }
-    });
-    setChartData(monthlyData);
-    const categoryData = transactions
-      .filter(t => t.type === 'expense')
-      .reduce((acc, t) => {
-        acc[t.category] = (acc[t.category] || 0) + t.amount;
-        return acc;
-      }, {});
-    setPieChartData(Object.entries(categoryData).map(([name, value]) => ({ name, value })));
-  };
-
-  const updateGoals = () => {
-    setGoals(prevGoals => 
-      prevGoals.map(goal => {
-        const relevantTransactions = transactions.filter(t => 
-          t.category.toLowerCase() === goal.description.toLowerCase()
-        );
-        const totalAmount = relevantTransactions.reduce((sum, t) => 
-          t.type === 'income' ? sum + t.amount : sum - t.amount, 0
-        );
-        return { ...goal, current: goal.current + totalAmount };
-      })
-    );
   };
 
   const handleInputChange = (e) => {
@@ -198,16 +202,16 @@ export default function Tracker() {
           <div className="summary-card">
             <h2>Balance</h2>
             <p className={`balance ${balance >= 0 ? "positive" : "negative"}`}>
-              ${balance.toFixed(2)}
+              {formatCurrency(balance, currency.code, currency.symbol)}
             </p>
           </div>
           <div className="summary-card">
             <h2>Income</h2>
-            <p className="income">${totalIncome.toFixed(2)}</p>
+            <p className="income">{formatCurrency(totalIncome, currency.code, currency.symbol)}</p>
           </div>
           <div className="summary-card">
             <h2>Expenses</h2>
-            <p className="expenses">${totalExpenses.toFixed(2)}</p>
+            <p className="expenses">{formatCurrency(totalExpenses, currency.code, currency.symbol)}</p>
           </div>
         </section>
         <section className="chart-section">
@@ -260,7 +264,7 @@ export default function Tracker() {
                     </span>
                   </div>
                   <span className="transaction-amount">
-                    ${transaction.amount.toFixed(2)}
+                    {formatCurrency(transaction.amount, currency.code, currency.symbol)}
                   </span>
                   <button
                     onClick={() => deleteTransaction(transaction._id)}
@@ -331,7 +335,7 @@ export default function Tracker() {
                   <span className="goal-description">{goal.description}</span>
                   <progress value={goal.current} max={goal.target}></progress>
                   <span className="goal-progress">
-                    ${goal.current.toFixed(2)} / ${goal.target}
+                    {formatCurrency(goal.current, currency.code, currency.symbol)} / {formatCurrency(goal.target, currency.code, currency.symbol)}
                   </span>
                 </div>
                 <div className="action-buttons">

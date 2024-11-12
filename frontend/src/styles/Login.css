@@ -55,31 +55,56 @@ h2 {
 .input-group {
   position: relative;
   margin-bottom: 20px;
+  display: flex;
+  align-items: center;
 }
 
 .input-group svg {
   position: absolute;
-  left: 15px;
+  right: 15px; /* Changed from left to right */
   top: 50%;
   transform: translateY(-50%);
   color: var(--light-text-color);
+  pointer-events: none; /* Prevents icon from interfering with input */
+  z-index: 1;
 }
 
 input {
   width: 100%;
-  padding: 15px 15px 15px 45px;
+  padding: 15px;
+  padding-right: 45px; /* Changed padding-left to padding-right */
   border: 1px solid var(--input-border);
-  border-radius: 5px;
+  border-radius: 8px;
   background-color: var(--input-bg);
   color: var(--text-color);
   font-size: 16px;
-  transition: border-color 0.3s ease;
+  transition: all 0.3s ease;
   box-sizing: border-box;
 }
 
-input:focus {
-  outline: none;
-  border-color: var(--accent-color);
+.input-group:hover svg {
+  color: var(--accent-color);
+}
+
+.input-group input:focus + svg {
+  color: var(--accent-color);
+}
+
+.input-group:focus-within::after {
+  background: linear-gradient(to left, var(--card-bg) 50%, transparent);
+}
+
+/* Add error state styling */
+.error-message {
+  color: #e74c3c;
+  background-color: #fde8e7;
+  padding: 12px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .submit-btn {

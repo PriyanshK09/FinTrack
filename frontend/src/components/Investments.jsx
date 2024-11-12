@@ -1,10 +1,12 @@
 "use client"
 
 import React, { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { TrendingUp, TrendingDown, RefreshCw, Plus, X, DollarSign, Filter, BarChart } from 'lucide-react'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 import '../styles/Investments.css'
+import { useCurrency } from '../context/CurrencyContext';
+import { formatCurrency } from '../utils/currencyUtils';
 
 const fetchInvestmentData = async () => {
   try {
@@ -28,6 +30,7 @@ const generateChartData = (investments) => {
 }
 
 export default function Investments() {
+  const { currency } = useCurrency();
   const [investments, setInvestments] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [isAddingInvestment, setIsAddingInvestment] = useState(false)
@@ -136,14 +139,14 @@ export default function Investments() {
             <h2 className="card-title">Total Invested</h2>
             <p className="card-value">
               <DollarSign className="card-icon" />
-              {totalInvested.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}
+              {formatCurrency(totalInvested, currency.code, currency.symbol)}
             </p>
           </div>
           <div className="investment-card">
             <h2 className="card-title">Current Value</h2>
             <p className="card-value">
               <DollarSign className="card-icon" />
-              {totalCurrentValue.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}
+              {formatCurrency(totalCurrentValue, currency.code, currency.symbol)}
             </p>
           </div>
           <div className="investment-card">
@@ -209,8 +212,8 @@ export default function Investments() {
                   <tr key={investment.id}>
                     <td>{investment.name}</td>
                     <td>{investment.type}</td>
-                    <td>{investment.amount.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</td>
-                    <td>{investment.currentValue.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</td>
+                    <td>{formatCurrency(investment.amount, currency.code, currency.symbol)}</td>
+                    <td>{formatCurrency(investment.currentValue, currency.code, currency.symbol)}</td>
                     <td className={investment.returns >= 0 ? 'positive' : 'negative'}>
                       {investment.returns.toFixed(2)}%
                     </td>
