@@ -27,6 +27,24 @@ const userSchema = new mongoose.Schema({
       type: Boolean,
       default: true
     }
+  },
+  isPremium: {
+    type: Boolean,
+    default: false
+  },
+  subscription: {
+    status: {
+      type: String,
+      enum: ['inactive', 'active'],
+      default: 'inactive'
+    },
+    plan: {
+      type: String,
+      enum: ['basic', 'pro', 'enterprise'],
+      default: 'basic'
+    },
+    startDate: Date,
+    endDate: Date
   }
 }, { timestamps: true });
 

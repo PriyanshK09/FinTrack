@@ -14,7 +14,7 @@ import {
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import '../styles/Header.css';
-import { useAuth } from '../context/AuthContext'; // Fixed import path
+import { useAuth } from '../context/AuthContext';
 import { useScrollNavigation } from '../hooks/useScrollNavigation';
 
 export default function Header() {
@@ -22,7 +22,7 @@ export default function Header() {
   const [scrollState, setScrollState] = useState('top');
   const [showUserMenu, setShowUserMenu] = useState(false);
   const userMenuRef = useRef(null);
-  const { isAuthenticated, setIsAuthenticated, userData, setUserData } = useAuth();
+  const { isAuthenticated, setIsAuthenticated, userData, setUserData, user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const { handleNavigation } = useScrollNavigation();
@@ -85,6 +85,9 @@ export default function Header() {
         <div className="logo" onClick={() => navigate('/')}>
           <DollarSign size={28} />
           <h1>FinanceTrack</h1>
+          {user?.isPremium && (
+            <span className="pro-badge">PRO</span>
+          )}
         </div>
         
         <nav className={`nav ${isMenuOpen ? 'nav-open' : ''}`}>

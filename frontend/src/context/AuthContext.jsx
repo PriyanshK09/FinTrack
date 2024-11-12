@@ -1,11 +1,13 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 
-const AuthContext = createContext();
+// Export the context so it can be imported directly
+export const AuthContext = createContext();
 
-export function AuthProvider({ children }) {
+export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userData, setUserData] = useState(null);
+  const [user, setUser] = useState(null);
 
   const checkAuth = async () => {
     const token = localStorage.getItem('authToken');
@@ -21,9 +23,19 @@ export function AuthProvider({ children }) {
         setIsAuthenticated(false);
         setUserData(null);
       }
-    } else {
-      setIsAuthenticated(false);
-      setUserData(null);
+    }
+  };
+
+  const fetchUser = async () => {
+    try {
+      const response = await fetch('/api/users/me');
+      const data = await response.json();
+      setUser({
+        ...data,
+        isPremium: data.isPremium || false
+      });
+    } catch (error) {
+      console.error('Error fetching user:', error);
     }
   };
 
@@ -32,10 +44,19 @@ export function AuthProvider({ children }) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, setIsAuthenticated, userData, setUserData, checkAuth }}>
+    <AuthContext.Provider value={{ 
+      isAuthenticated, 
+      setIsAuthenticated, 
+      userData, 
+      setUserData, 
+      checkAuth,
+      user,
+      setUser,
+      fetchUser 
+    }}>
       {children}
     </AuthContext.Provider>
   );
-}
+};
 
 export const useAuth = () => useContext(AuthContext);

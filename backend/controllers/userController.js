@@ -26,3 +26,15 @@ exports.updateSettings = async (req, res) => {
     res.status(500).json({ message: 'Error updating settings' });
   }
 };
+
+exports.getCurrentUser = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select('-password');
+    res.json({
+      ...user.toObject(),
+      isPremium: user.isPremium || false
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching user data' });
+  }
+};
