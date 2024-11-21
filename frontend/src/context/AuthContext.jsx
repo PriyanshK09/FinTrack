@@ -13,7 +13,7 @@ export const AuthProvider = ({ children }) => {
     const token = localStorage.getItem('authToken');
     if (token) {
       try {
-        const response = await axios.get('http://localhost:5000/api/auth/user', {
+        const response = await axios.get('https://fintrack-jl50.onrender.com/api/auth/user', {
           headers: { Authorization: `Bearer ${token}` }
         });
         setUserData(response.data);
@@ -31,7 +31,7 @@ export const AuthProvider = ({ children }) => {
       const token = localStorage.getItem('authToken');
       if (!token) return;
 
-      const response = await axios.get('http://localhost:5000/api/auth/user', {
+      const response = await axios.get('https://fintrack-jl50.onrender.com/api/auth/user', {
         headers: { Authorization: `Bearer ${token}` }
       });
 

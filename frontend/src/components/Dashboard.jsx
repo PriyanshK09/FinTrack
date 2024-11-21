@@ -37,7 +37,7 @@ export default function Dashboard() {
   const fetchUserData = useCallback(async () => {
     try {
       const token = localStorage.getItem('authToken');
-      const response = await axios.get('http://localhost:5000/api/auth/user', {
+      const response = await axios.get('https://fintrack-jl50.onrender.com/api/auth/user', {
         headers: { Authorization: `Bearer ${token}` }
       });
       setUserData(response.data);
@@ -125,7 +125,7 @@ export default function Dashboard() {
       }
 
       await axios.put(
-        'http://localhost:5000/api/users/settings',
+        'https://fintrack-jl50.onrender.com/api/users/settings',
         updateData,
         { headers: { Authorization: `Bearer ${token}` }}
       );
@@ -145,7 +145,7 @@ export default function Dashboard() {
     try {
       const token = localStorage.getItem('authToken');
       await axios.put(
-        'http://localhost:5000/api/users/profile',
+        'https://fintrack-jl50.onrender.com/api/users/profile',
         updateForm,
         { headers: { Authorization: `Bearer ${token}` }}
       );
@@ -165,7 +165,7 @@ export default function Dashboard() {
     try {
       const token = localStorage.getItem('authToken');
       await axios.put(
-        'http://localhost:5000/api/users/password',
+        'https://fintrack-jl50.onrender.com/api/users/password',
         {
           currentPassword: passwordForm.currentPassword,
           newPassword: passwordForm.newPassword
@@ -184,7 +184,7 @@ export default function Dashboard() {
     try {
       const token = localStorage.getItem('authToken');
       await axios.post(
-        'http://localhost:5000/api/users/cancel-premium',
+        'https://fintrack-jl50.onrender.com/api/users/cancel-premium',
         {},
         { headers: { Authorization: `Bearer ${token}` }}
       );

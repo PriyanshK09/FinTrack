@@ -43,7 +43,7 @@ export default function Checkout() {
 
       // Create order with amount in paise (499 * 100)
       const response = await axios.post(
-        'http://localhost:5000/api/payment/create-order',
+        'https://fintrack-jl50.onrender.com/api/payment/create-order',
         { amount: 49900 }, // Amount in paise
         { 
           headers: { 
@@ -70,7 +70,7 @@ export default function Checkout() {
         handler: async (response) => {
           try {
             await axios.post(
-              'http://localhost:5000/api/payment/verify',
+              'https://fintrack-jl50.onrender.com/api/payment/verify',
               {
                 razorpay_order_id: response.razorpay_order_id,
                 razorpay_payment_id: response.razorpay_payment_id,

@@ -100,7 +100,7 @@ export default function Tracker() {
   const fetchTransactions = async () => {
     try {
       const token = localStorage.getItem('authToken');
-      const response = await axios.get('http://localhost:5000/api/transactions', {
+      const response = await axios.get('https://fintrack-jl50.onrender.com/api/transactions', {
         headers: { Authorization: `Bearer ${token}` }
       });
       setTransactions(response.data);
@@ -112,7 +112,7 @@ export default function Tracker() {
   const fetchGoals = async () => {
     try {
       const token = localStorage.getItem('authToken');
-      const response = await axios.get('http://localhost:5000/api/goals', {
+      const response = await axios.get('https://fintrack-jl50.onrender.com/api/goals', {
         headers: { Authorization: `Bearer ${token}` }
       });
       setGoals(response.data);
@@ -141,7 +141,7 @@ export default function Tracker() {
     if (newTransaction.description && newTransaction.amount && newTransaction.date && newTransaction.category) {
       try {
         const token = localStorage.getItem('authToken');
-        const response = await axios.post('http://localhost:5000/api/transactions', newTransaction, {
+        const response = await axios.post('https://fintrack-jl50.onrender.com/api/transactions', newTransaction, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setTransactions(prev => [...prev, response.data]);
@@ -157,7 +157,7 @@ export default function Tracker() {
     if (newGoal.description && newGoal.target && newGoal.current) {
       try {
         const token = localStorage.getItem('authToken');
-        const response = await axios.post('http://localhost:5000/api/goals', newGoal, {
+        const response = await axios.post('https://fintrack-jl50.onrender.com/api/goals', newGoal, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setGoals(prev => [...prev, response.data]);
@@ -173,7 +173,7 @@ export default function Tracker() {
     if (editingGoal.description && editingGoal.target && editingGoal.current) {
       try {
         const token = localStorage.getItem('authToken');
-        const response = await axios.put(`http://localhost:5000/api/goals/${editingGoal._id}`, editingGoal, {
+        const response = await axios.put(`https://fintrack-jl50.onrender.com/api/goals/${editingGoal._id}`, editingGoal, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setGoals(prev => prev.map(goal => (goal._id === editingGoal._id ? response.data : goal)));
@@ -187,7 +187,7 @@ export default function Tracker() {
   const deleteTransaction = async (id) => {
     try {
       const token = localStorage.getItem('authToken');
-      await axios.delete(`http://localhost:5000/api/transactions/${id}`, {
+      await axios.delete(`https://fintrack-jl50.onrender.com/api/transactions/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setTransactions(prev => prev.filter(transaction => transaction._id !== id));
@@ -199,7 +199,7 @@ export default function Tracker() {
   const deleteGoal = async (id) => {
     try {
       const token = localStorage.getItem('authToken');
-      await axios.delete(`http://localhost:5000/api/goals/${id}`, {
+      await axios.delete(`https://fintrack-jl50.onrender.com/api/goals/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setGoals(prev => prev.filter(goal => goal._id !== id));

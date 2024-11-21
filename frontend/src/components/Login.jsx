@@ -22,9 +22,9 @@ export default function Login() {
     try {
       if (isLogin) {
         // Login request
-        const response = await axios.post('http://localhost:5000/api/auth/login', { email, password });
+        const response = await axios.post('https://fintrack-jl50.onrender.com/api/auth/login', { email, password });
         localStorage.setItem('authToken', response.data.token); // Save the token in localStorage
-        const userResponse = await axios.get('http://localhost:5000/api/auth/user', {
+        const userResponse = await axios.get('https://fintrack-jl50.onrender.com/api/auth/user', {
           headers: { Authorization: `Bearer ${response.data.token}` }
         });
         setIsAuthenticated(true);
@@ -37,7 +37,7 @@ export default function Login() {
           return;
         }
 
-        const response = await axios.post('http://localhost:5000/api/auth/signup', { name, email, password });
+        const response = await axios.post('https://fintrack-jl50.onrender.com/api/auth/signup', { name, email, password });
         localStorage.setItem('authToken', response.data.token); // Save the token in localStorage
         navigate('/'); // Redirect to the homepage after successful signup
       }

@@ -14,7 +14,7 @@ export function CurrencyProvider({ children }) {
       try {
         const token = localStorage.getItem('authToken');
         if (token) {
-          const response = await axios.get('http://localhost:5000/api/auth/user', {
+          const response = await axios.get('https://fintrack-jl50.onrender.com/api/auth/user', {
             headers: { Authorization: `Bearer ${token}` }
           });
           if (response.data.settings?.currency) {

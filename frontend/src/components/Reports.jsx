@@ -47,7 +47,7 @@ export default function Reports() {
         const dateRange = getDateRange(range)
         
         const response = await axios.get(
-          `http://localhost:5000/api/reports`, {
+          `https://fintrack-jl50.onrender.com/api/reports`, {
             params: {
               timeRange: range,
               startDate: dateRange.startDate,
